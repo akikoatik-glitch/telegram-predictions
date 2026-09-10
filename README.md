@@ -1,52 +1,57 @@
-# Telegram Predictions Poster ⚽
+# Telegram Predictions Poster v2 ⚽ — professional automated service
 
-Posts **before every match** of the **top 10 leagues**, every day, in
-**Arabic + English**, to your Telegram group. Runs itself on GitHub —
-your PC can stay off. No dependencies, no server, free forever.
+Posts **before every match** (~8–20 min before kickoff, target 15), top 10
+leagues, **Arabic + English**, grades every result (✅ WIN / ❌ MISS),
+tracks accuracy weekly. Runs itself on GitHub — PC can stay off.
 
-Leagues: Premier League, La Liga, Serie A, Bundesliga, Ligue 1, Eredivisie,
-Primeira Liga, Süper Lig. (Champions/Europa League unlock if you later add a
-free api-football.com key — the code switches automatically.)
+## Architecture (provider-swappable)
 
-## How it works
-
-1. **Daily 06:00 UTC** — `fetch-fixtures.js` caches fixtures + team strength
-   from the free openfootball dataset — **no signup, no api key**
-   (`data/cache.json`).
-2. **Every hour** — `post-due.js` finds cached matches kicking off in
-   45–240 minutes, computes Poisson probabilities from real results,
-   posts once per match, and records it in `data/posted.json` (never double-posts).
-3. Caps: max 15 posts/day, skips anything under 55 confidence.
-
-## Setup (you do this once, ~10 minutes)
-
-1. **Bot token**: Telegram → `@BotFather` → `/newbot` → copy the token.
-2. **Group**: add the bot to your group as **admin**. Add `@userinfobot`
-   to the group too — it replies with the group ID (looks like `-100...`).
-3. **Data key: NOTHING NEEDED** - the bot uses a free public dataset
-   automatically. (Optional later: free api-football.com key for UCL/UEL.)
-4. **Repo**: create an empty PRIVATE GitHub repo, upload these files
-   (or push this folder).
-5. **Secrets** (repo → Settings → Secrets and variables → Actions → New secret,
-   only 2 needed):
-   - `TELEGRAM_BOT_TOKEN` = token from step 1
-   - `TELEGRAM_CHAT_ID` = group ID from step 2
-6. **Actions** tab → enable workflows → press **Run workflow** once to test.
-   Check your group: predictions for matches starting in 1–3 hours appear.
-
-## Local test (no secrets needed)
-
-```bash
-node test-dry.js
+```
+openfootball (free, no key) ─┐
+                             ├─► data/cache.json ─► Poisson model ─► best pick ─► Telegram
+API-Football (free key) ─────┘        ▲                  ▲                ▲
+   └─ exact UTC, standings      team strength      confidence bands   AR+EN cards
 ```
 
-## Tune behaviour
+- `src/providers/openfootball.js` / `apifootball.js` — same interface.
+  API activates automatically when `API_FOOTBALL_KEY` exists.
+- `src/tz.js` — stadium-local times → true UTC (EU DST handled).
+- `src/model.js` — Poisson xG → 1X2, DC, O1.5/O2.5, U3.5, BTTS, top scores.
+- `src/pick.js` — every eligible market competes; winner is pure math.
+- `src/db.js` — `predictions.json` (full record per match) + `stats.json`.
+- Runners: `fetch-fixtures.js` (daily) · `post-due.js` (every 10 min) ·
+  `check-results.js` (hourly grading + Monday weekly summary) · `stats.js`.
 
-Edit the `env:` block in `.github/workflows/predictions.yml`:
-`LEAD_MINUTES_MIN/MAX` (how early before kickoff), `MAX_POSTS_PER_DAY`,
-`MIN_CONFIDENCE`. Seasons: change `SEASON` each August.
+## League table (config/src/config.js — data, not code)
 
-## Safety
+| League | No-key file | API id |
+|---|---|---|
+| Premier League, La Liga, Serie A, Bundesliga, Ligue 1, Eredivisie, Primeira Liga | ✅ | ✅ |
+| Belgian Pro League, Turkish Süper Lig, Saudi Pro League | needs free key | 144/203/307 |
 
-- Probabilities only, never "guaranteed" — every post carries a disclaimer.
-- Secrets live in GitHub Secrets, never in code. `.env` is git-ignored.
+## Setup
+
+1. `@BotFather` → token. Bot → group/channel **admin**. Group ID via `@userinfobot`.
+2. Push this folder to a GitHub repo. **Make the repo PUBLIC**
+   (Settings → Danger Zone): the 10-minute schedule needs ~3,900 free
+   Actions minutes/month — unlimited on public repos, capped at 2,000 on
+   private ones. Code contains zero secrets, so public is safe.
+3. Secrets (2): `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID`.
+4. Optional: `API_FOOTBALL_KEY` (free, unlocks all 10 leagues).
+5. Actions → enable → Run workflow → mode `post` to test.
+
+## Admin without a server (no /commands needed on free tier)
+
+- **Pause**: repo → Settings → Variables → new variable `PAUSED=true`
+  (delete it to resume). Also `LANG`, timing, `MIN_CONFIDENCE`,
+  `MAX_POSTS_PER_DAY` via workflow `env:`.
+- **Manual runs**: Actions → Run workflow → mode `post|fetch|results`.
+- **Stats**: `npm run stats` locally, `STATS.md` in repo, weekly summary
+  auto-posted to the channel every Monday.
+
+## Honesty rules enforced in code
+
+- Below `MIN_CONFIDENCE` (default 60) → match SKIPPED, never published.
+- No invented injuries/odds/xG/corners — absent data is omitted.
+- Never "100%" or "guaranteed" — every post carries a disclaimer.
+- Results graded from real scores; misses posted publicly.

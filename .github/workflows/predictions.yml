@@ -2,18 +2,27 @@ name: Football predictions poster
 
 on:
   schedule:
-    # Daily fixtures refresh (06:00 UTC) — caches next 2 days, top 10 leagues
+    # Daily fixtures refresh (06:00 UTC)
     - cron: '0 6 * * *'
-    # Match check every hour — posts matches kicking off in 60-180 minutes
-    - cron: '15 * * * *'
-  workflow_dispatch: # manual "Run workflow" button
+    # Pre-match check every 10 min — posts ~10-15 min before kickoff
+    - cron: '*/10 * * * *'
+    # Results grading every hour
+    - cron: '35 * * * *'
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: 'Manual run mode'
+        required: true
+        default: 'post'
+        type: choice
+        options: [post, fetch, results]
 
 permissions:
   contents: write
 
 jobs:
   fetch:
-    if: github.event.schedule == '0 6 * * *' || github.event_name == 'workflow_dispatch'
+    if: github.event.schedule == '0 6 * * *' || (github.event_name == 'workflow_dispatch' && inputs.mode == 'fetch')
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -24,7 +33,7 @@ jobs:
       - run: node fetch-fixtures.js
         env:
           API_FOOTBALL_KEY: ${{ secrets.API_FOOTBALL_KEY }}
-          SEASON: '2025'
+          SEASON: '2026-27'
       - name: Commit fresh cache
         run: |
           git config user.name "predictions-bot"
@@ -34,10 +43,11 @@ jobs:
           git commit -m "fixtures refresh $(date -u +%Y-%m-%d)"
           for i in 1 2 3 4 5; do
             git pull --rebase origin main && git push && break
-            echo "push race with sibling job, retry $i"; sleep 5
+            echo "push race, retry $i"; sleep 5
           done
 
   post:
+    if: github.event.schedule == '*/10 * * * *' || (github.event_name == 'workflow_dispatch' && inputs.mode == 'post')
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -45,24 +55,56 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+      - name: Admin pause guard
+        run: |
+          if [ "${{ vars.PAUSED }}" = "true" ]; then echo "PAUSED by admin - skipping"; exit 0; fi
       - run: node post-due.js
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           API_FOOTBALL_KEY: ${{ secrets.API_FOOTBALL_KEY }}
-          SEASON: '2025'
-          LEAD_MINUTES_MIN: '45'
-          LEAD_MINUTES_MAX: '240'
+          SEASON: '2026-27'
+          LANG: 'both'
+          PREDICTION_MINUTES_BEFORE_KICKOFF: '15'
+          MIN_CONFIDENCE: '60'
           MAX_POSTS_PER_DAY: '15'
-          MIN_CONFIDENCE: '55'
-      - name: Commit posted log
+      - name: Commit predictions DB
         run: |
           git config user.name "predictions-bot"
           git config user.email "predictions-bot@users.noreply.github.com"
-          git add data/posted.json
+          git add data/predictions.json
           git diff --cached --quiet && echo "no changes" && exit 0
-          git commit -m "posted log $(date -u +%Y-%m-%dT%H:%MZ)"
+          git commit -m "predictions $(date -u +%Y-%m-%dT%H:%MZ)"
           for i in 1 2 3 4 5; do
             git pull --rebase origin main && git push && break
-            echo "push race with sibling job, retry $i"; sleep 5
+            echo "push race, retry $i"; sleep 5
+          done
+
+  results:
+    if: github.event.schedule == '35 * * * *' || (github.event_name == 'workflow_dispatch' && inputs.mode == 'results')
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node check-results.js
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          API_FOOTBALL_KEY: ${{ secrets.API_FOOTBALL_KEY }}
+          SEASON: '2026-27'
+          LANG: 'both'
+      - run: node stats.js --md
+      - name: Commit results + stats
+        run: |
+          git config user.name "predictions-bot"
+          git config user.email "predictions-bot@users.noreply.github.com"
+          git add data/predictions.json data/stats.json STATS.md
+          git diff --cached --quiet && echo "no changes" && exit 0
+          git commit -m "results $(date -u +%Y-%m-%dT%H:%MZ)"
+          for i in 1 2 3 4 5; do
+            git pull --rebase origin main && git push && break
+            echo "push race, retry $i"; sleep 5
           done

@@ -1,5 +1,7 @@
 'use strict';
-// Central configuration. Everything tunable via environment variables.
+// ALL tunables live here (env overrides). Leagues are data, not code:
+// add / remove / disable entries freely. `file` = openfootball code
+// (no key needed), `apiId` = API-Football id (needs free key).
 function num(name, def) {
   const v = parseFloat(process.env[name]);
   return Number.isFinite(v) ? v : def;
@@ -9,30 +11,48 @@ function str(name, def) {
   return v || def;
 }
 
-// Top 10 leagues (API-Football IDs). Covers the matches people care about.
 const LEAGUES = [
-  { id: 39, name: 'Premier League' },
-  { id: 140, name: 'La Liga' },
-  { id: 135, name: 'Serie A' },
-  { id: 78, name: 'Bundesliga' },
-  { id: 61, name: 'Ligue 1' },
-  { id: 88, name: 'Eredivisie' },
-  { id: 94, name: 'Primeira Liga' },
-  { id: 203, name: 'Super Lig' },
-  { id: 2, name: 'Champions League' },
-  { id: 3, name: 'Europa League' },
+  { key: 'pl',  name: 'Premier League',    file: 'en.1', apiId: 39,  tz: 'Europe/London', enabled: true },
+  { key: 'lal', name: 'La Liga',           file: 'es.1', apiId: 140, tz: 'CET',           enabled: true },
+  { key: 'sa',  name: 'Serie A',           file: 'it.1', apiId: 135, tz: 'CET',           enabled: true },
+  { key: 'bl',  name: 'Bundesliga',        file: 'de.1', apiId: 78,  tz: 'CET',           enabled: true },
+  { key: 'l1',  name: 'Ligue 1',           file: 'fr.1', apiId: 61,  tz: 'CET',           enabled: true },
+  { key: 'ered',name: 'Eredivisie',        file: 'nl.1', apiId: 88,  tz: 'CET',           enabled: true },
+  { key: 'pliga',name:'Primeira Liga',     file: 'pt.1', apiId: 94,  tz: 'WET',           enabled: true },
+  { key: 'bel', name: 'Belgian Pro League',file: null,   apiId: 144, tz: 'CET',           enabled: true },
+  { key: 'tur', name: 'Turkish Super Lig', file: null,   apiId: 203, tz: 'TRT',           enabled: true },
+  { key: 'sau', name: 'Saudi Pro League',  file: null,   apiId: 307, tz: 'AST',           enabled: true },
 ];
 
+// Posting window derived from one knob: PREDICTION_MINUTES_BEFORE_KICKOFF.
+// Window = [max(2, N-7), N+5]; with the 10-minute checker this tiles every
+// match exactly once (window length 12 >= 10-minute interval).
+const target = num('PREDICTION_MINUTES_BEFORE_KICKOFF', 15);
+const spread = num('WINDOW_SPREAD', 7);
+
 module.exports = {
-  LEAGUES,
+  LEAGUES: LEAGUES.filter((l) => l.enabled),
+  ALL_LEAGUES: LEAGUES,
   telegramToken: str('TELEGRAM_BOT_TOKEN', ''),
   chatId: str('TELEGRAM_CHAT_ID', ''),
   apiKey: str('API_FOOTBALL_KEY', ''),
   apiBase: 'https://v3.football.api-sports.io',
-  season: num('SEASON', 2025),
-  leadMin: num('LEAD_MINUTES_MIN', 60),   // post matches kicking off in...
-  leadMax: num('LEAD_MINUTES_MAX', 180),  // ...this many minutes from now
+  ofBase: 'https://raw.githubusercontent.com/openfootball/football.json/master/',
+  season: str('SEASON', '2026-27'),
+  lang: str('LANG', 'both'), // both | ar | en
+  leadMin: num('LEAD_MINUTES_MIN', Math.max(2, target - spread)),
+  leadMax: num('LEAD_MINUTES_MAX', target + 5),
+  targetKickoffLead: target,
+  minConfidence: num('MIN_CONFIDENCE', 60), // below this: SKIP, never publish
   maxPostsPerDay: num('MAX_POSTS_PER_DAY', 15),
-  minConfidence: num('MIN_CONFIDENCE', 55),
   dryRun: /^true$/i.test(str('DRY_RUN', 'false')),
+  paused: /^true$/i.test(str('PAUSED', 'false')),
+  modelVersion: 'poisson-v2',
+  // Confidence bands -> human labels (spec section 4).
+  bands: [
+    { min: 90, en: 'Extremely High', ar: 'مرتفع جداً جداً' },
+    { min: 80, en: 'Very High', ar: 'مرتفع جداً' },
+    { min: 70, en: 'High', ar: 'مرتفع' },
+    { min: 60, en: 'Medium', ar: 'متوسط' },
+  ],
 };
