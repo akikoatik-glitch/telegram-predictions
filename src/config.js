@@ -19,9 +19,9 @@ const LEAGUES = [
   { key: 'l1',  name: 'Ligue 1',           file: 'fr.1', apiId: 61,  tz: 'CET',           enabled: true },
   { key: 'ered',name: 'Eredivisie',        file: 'nl.1', apiId: 88,  tz: 'CET',           enabled: true },
   { key: 'pliga',name:'Primeira Liga',     file: 'pt.1', apiId: 94,  tz: 'WET',           enabled: true },
-  { key: 'bel', name: 'Belgian Pro League',file: null,   apiId: 144, tz: 'CET',           enabled: true },
-  { key: 'tur', name: 'Turkish Super Lig', file: null,   apiId: 203, tz: 'TRT',           enabled: true },
-  { key: 'sau', name: 'Saudi Pro League',  file: null,   apiId: 307, tz: 'AST',           enabled: true },
+  { key: 'bel', name: 'Belgian Pro League',file: null,   apiId: 144, tz: 'CET', espn: null, txt: { repo: 'openfootball/belgium', file: 'be1.txt' }, enabled: true },
+  { key: 'tur', name: 'Turkish Super Lig', file: null,   apiId: 203, tz: 'TRT', espn: 'tur.1', enabled: true },
+  { key: 'sau', name: 'Saudi Pro League',  file: null,   apiId: 307, tz: 'AST', espn: 'ksa.1', enabled: true },
 ];
 
 // Posting window derived from one knob: PREDICTION_MINUTES_BEFORE_KICKOFF.

@@ -24,10 +24,16 @@ API-Football (free key) ─────┘        ▲                  ▲      
 
 ## League table (config/src/config.js — data, not code)
 
-| League | No-key file | API id |
-|---|---|---|
-| Premier League, La Liga, Serie A, Bundesliga, Ligue 1, Eredivisie, Primeira Liga | ✅ | ✅ |
-| Belgian Pro League, Turkish Süper Lig, Saudi Pro League | needs free key | 144/203/307 |
+| League | Free source, no key |
+|---|---|
+| Premier League, La Liga, Serie A, Bundesliga, Ligue 1, Eredivisie, Primeira Liga | openfootball schedules + results |
+| Belgian Pro League | belgium be1.txt schedule + results |
+| Turkish Süper Lig, Saudi Pro League | ESPN scoreboards (exact UTC, polite volume) |
+
+All 10 first divisions work with zero keys. An optional free
+api-football.com key switches everything to exact-UTC standings-based data
+and unlocks UCL/UEL — the code detects it automatically. Matches without a
+published kickoff time are counted and skipped, never guessed.
 
 ## Setup
 

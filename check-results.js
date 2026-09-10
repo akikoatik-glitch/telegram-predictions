@@ -15,6 +15,8 @@ const sender = require('./src/send');
 const format = require('./src/format');
 const db = require('./src/db');
 const ofree = require('./src/providers/openfootball');
+const otxt = require('./src/providers/opentxt');
+const espn = require('./src/providers/espn');
 const apif = require('./src/providers/apifootball');
 
 const MATCH_LEN_MIN = 130; // full time + margin before grading
@@ -44,9 +46,12 @@ async function main() {
   console.log(`${ids.length} posted match(es) ready for grading`);
   if (!ids.length) { await maybeWeekly(records); return; }
 
-  const scores = config.apiKey
-    ? await apif.resultsFor(ids)
-    : await ofree.resultsFor(ids);
+  const scores = {};
+  // Route each id to its provider by prefix (fixtures keep their origin).
+  Object.assign(scores, await ofree.resultsFor(ids));
+  Object.assign(scores, await otxt.resultsFor(ids));
+  Object.assign(scores, await espn.resultsFor(ids));
+  if (config.apiKey) Object.assign(scores, await apif.resultsFor(ids));
 
   let graded = 0;
   for (const id of ids) {

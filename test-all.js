@@ -30,7 +30,7 @@ async function main() {
     ok('2. telegram connection', !!j.ok, j.ok ? '@' + j.result.username : j.description);
   } catch (e) { ok('2. telegram connection', false, e.message); }
 
-  // 3-4. data source: real league file, real upcoming fixtures
+  // 3-4. data sources: real league files, real upcoming fixtures
   let table = null;
   try {
     const of = require('./src/providers/openfootball');
@@ -40,6 +40,16 @@ async function main() {
     ok('4. fixture retrieval', upcoming.length > 0, upcoming.length + ' future fixtures');
     const pl = data.tables['Premier League'] || {};
     table = Object.keys(pl).length ? pl : data.tables[Object.keys(data.tables)[0]];
+    const espn = require('./src/providers/espn');
+    const es = await espn.load();
+    const leaguesHit = new Set(es.fixtures.map((f) => f.league)).size + Object.keys(es.tables).filter((k) => Object.keys(es.tables[k]).length).length;
+    ok('3b. espn provider (Belgian/Turkish/Saudi)', leaguesHit >= 1, es.fixtures.length + ' upcoming fixtures');
+    const otxt = require('./src/providers/opentxt');
+    const bt = await (await fetch('https://raw.githubusercontent.com/openfootball/belgium/master/2026-27/be1.txt')).text();
+    const bp = otxt.parse(bt, { key: 'bel', name: 'Belgian Pro League', tz: 'CET' });
+    const mechelen = bp.fixtures.find((f) => f.home === 'KV Mechelen' && f.away === 'RSC Anderlecht');
+    ok('3c. belgian txt provider', bp.fixtures.length > 10 && !!mechelen && mechelen.date.startsWith('2026-09-11T18:45'),
+      bp.fixtures.length + ' upcoming, UTC conversion verified');
   } catch (e) { ok('3/4. data source', false, e.message); }
 
   // 5-6. prediction + confidence bands

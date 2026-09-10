@@ -17,8 +17,7 @@ async function load() {
   const fixtures = [];
   const tables = {};
   const missing = [];
-  for (const lg of config.LEAGUES) {
-    if (!lg.file) { missing.push(`${lg.name} (needs API key)`); continue; }
+  for (const lg of config.LEAGUES.filter((l) => l.file)) {
     const url = `${config.ofBase}${config.season}/${lg.file}.json`;
     let res;
     try { res = await fetch(url); } catch (e) { missing.push(`${lg.name} (network: ${e.message})`); continue; }

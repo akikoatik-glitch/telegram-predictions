@@ -14,18 +14,46 @@ const fs = require('fs');
 const path = require('path');
 const config = require('./src/config');
 const ofree = require('./src/providers/openfootball');
+const otxt = require('./src/providers/opentxt');
+const espn = require('./src/providers/espn');
 const apif = require('./src/providers/apifootball');
 
 async function main() {
+  const cachePath = path.join(__dirname, 'data', 'cache.json');
+  let old = { fixtures: [], tables: {} };
+  try { old = JSON.parse(fs.readFileSync(cachePath, 'utf8')); } catch {}
   let data;
   if (config.apiKey) {
-    console.log('source: api-football (key present)');
+    console.log('source: api-football (key present, all 10 leagues)');
     data = await apif.load(apif.todayPlus(0), apif.todayPlus(2));
   } else {
-    console.log('source: openfootball (no key needed)');
-    data = await ofree.load();
+    console.log('source: openfootball (7) + opentxt Belgian + espn Turkish/Saudi');
+    const [of, tx, es] = [await ofree.load(), await otxt.load(), await espn.load()];
+    data = {
+      fixtures: [...of.fixtures, ...tx.fixtures, ...es.fixtures].sort((a, b) => new Date(a.date) - new Date(b.date)),
+      tables: { ...of.tables, ...tx.tables, ...es.tables },
+    };
   }
-  const cache = { fetchedAt: new Date().toISOString(), season: config.season, ...data };
+  // Merge per league: refreshed leagues replace old data; skipped leagues
+  // keep yesterday's fixtures (future ones only) and tables. A hiccup in
+  // one provider never blanks another league's matches.
+  const now = Date.now();
+  const refreshed = new Set(Object.keys(data.tables));
+  const keptFixtures = (old.fixtures || []).filter(
+    (f) => !refreshed.has(f.league) && new Date(f.date).getTime() > now
+  );
+  const keptTables = {};
+  for (const [lg, tb] of Object.entries(old.tables || {})) {
+    if (!refreshed.has(lg)) keptTables[lg] = tb;
+  }
+  const keptLeagues = [...new Set([...keptFixtures.map((f) => f.league), ...Object.keys(keptTables)])];
+  if (keptLeagues.length) console.log('kept previous data for: ' + keptLeagues.join(', '));
+  const cache = {
+    fetchedAt: new Date().toISOString(),
+    season: config.season,
+    fixtures: [...keptFixtures, ...data.fixtures].sort((a, b) => new Date(a.date) - new Date(b.date)),
+    tables: { ...keptTables, ...data.tables },
+  };
   fs.mkdirSync(path.join(__dirname, 'data'), { recursive: true });
   fs.writeFileSync(path.join(__dirname, 'data', 'cache.json'), JSON.stringify(cache));
   console.log(`cached ${data.fixtures.length} fixtures across ${Object.keys(data.tables).length} leagues`);
