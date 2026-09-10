@@ -19,6 +19,7 @@ function parse(text, lg) {
   const baseYear = parseInt((text.match(/=\s*[^\n]*?(\d{4})\/\d{2}/) || [])[1] || '2026', 10);
   const fixtures = [];
   const table = {};
+  const history = [];
   const results = {}; // fixtureId -> 'H-A' for played matches
   const idOf = (dateStr, time, ht, at) =>
     `txt-${lg.key}-${dateStr}-${time}-${slug(ht)}-v-${slug(at)}`;
@@ -53,6 +54,7 @@ function parse(text, lg) {
       if (score) {
         bump(ht, score[0], score[1]);
         bump(at, score[1], score[0]);
+        history.push({ d: dateStr, h: ht, a: at, hg: score[0], ag: score[1] });
         results[idOf(dateStr, time || '15:00', ht, at)] = `${score[0]}-${score[1]}`;
       } else if (time) {
         fixtures.push({
@@ -70,28 +72,30 @@ function parse(text, lg) {
     }
   }
   fixtures.sort((a, b) => new Date(a.date) - new Date(b.date));
-  return { fixtures, table, results, skippedTimeless };
+  return { fixtures, table, results, history, skippedTimeless };
 }
 
 async function load() {
-  const leagues = config.LEAGUES.filter((l) => l.txt && !config.apiKey);
+  const leagues = config.LEAGUES.filter((l) => l.txt && (!config.apiKey || !l.apiId));
   const fixtures = [];
   const tables = {};
+  const history = {};
   for (const lg of leagues) {
     try {
       const url = `https://raw.githubusercontent.com/${lg.txt.repo}/master/${config.season}/${lg.txt.file}`;
       const res = await fetch(url);
       if (!res.ok) { console.log(`opentxt ${lg.name}: HTTP ${res.status} (not published yet?)`); continue; }
-      const { fixtures: fx, table, skippedTimeless } = parse(await res.text(), lg);
+      const { fixtures: fx, table, history: hist, skippedTimeless } = parse(await res.text(), lg);
       fixtures.push(...fx);
       tables[lg.name] = table;
+      history[lg.name] = hist;
       console.log(`opentxt ${lg.name}: ${fx.length} upcoming, timeless skipped: ${skippedTimeless}`);
     } catch (e) {
       console.log(`opentxt ${lg.name}: SKIPPED (${e.message})`);
     }
   }
   fixtures.sort((a, b) => new Date(a.date) - new Date(b.date));
-  return { fixtures, tables };
+  return { fixtures, tables, history };
 }
 
 // Scores for graded matches by re-reading the file: played lines carry

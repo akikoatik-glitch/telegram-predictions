@@ -32,6 +32,7 @@ async function main() {
     data = {
       fixtures: [...of.fixtures, ...tx.fixtures, ...es.fixtures].sort((a, b) => new Date(a.date) - new Date(b.date)),
       tables: { ...of.tables, ...tx.tables, ...es.tables },
+      history: { ...of.history, ...tx.history, ...es.history },
     };
   }
   // Merge per league: refreshed leagues replace old data; skipped leagues
@@ -43,8 +44,12 @@ async function main() {
     (f) => !refreshed.has(f.league) && new Date(f.date).getTime() > now
   );
   const keptTables = {};
+  const keptHistory = {};
   for (const [lg, tb] of Object.entries(old.tables || {})) {
     if (!refreshed.has(lg)) keptTables[lg] = tb;
+  }
+  for (const [lg, h] of Object.entries(old.history || {})) {
+    if (!refreshed.has(lg)) keptHistory[lg] = h;
   }
   const keptLeagues = [...new Set([...keptFixtures.map((f) => f.league), ...Object.keys(keptTables)])];
   if (keptLeagues.length) console.log('kept previous data for: ' + keptLeagues.join(', '));
@@ -53,6 +58,7 @@ async function main() {
     season: config.season,
     fixtures: [...keptFixtures, ...data.fixtures].sort((a, b) => new Date(a.date) - new Date(b.date)),
     tables: { ...keptTables, ...data.tables },
+    history: { ...(data.history || {}), ...keptHistory },
   };
   fs.mkdirSync(path.join(__dirname, 'data'), { recursive: true });
   fs.writeFileSync(path.join(__dirname, 'data', 'cache.json'), JSON.stringify(cache));

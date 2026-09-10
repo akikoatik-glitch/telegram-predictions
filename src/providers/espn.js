@@ -56,14 +56,18 @@ function teamsOf(ev) {
 }
 
 async function load() {
-  const leagues = config.LEAGUES.filter((l) => l.espn && (!config.apiKey));
+  // Leagues with an apiId use API-Football when a key exists; ESPN stays
+  // as the free path (and the only path for leagues without apiIds).
+  const leagues = config.LEAGUES.filter((l) => l.espn && (!config.apiKey || !l.apiId));
   // (With an API key, apifootball covers everything including these three.)
   const fixtures = [];
   const tables = {};
+  const history = {};
   const fetched = [];
   for (const lg of leagues) {
     try {
       const table = {};
+      history[lg.name] = [];
       // Past 30 days -> recent results for team strength (1 call).
       const past = await scoreboard(lg.espn, plusDays(-30), plusDays(-1));
       for (const ev of past) {
@@ -74,6 +78,8 @@ async function load() {
           table[nm] = table[nm] || { played: 0, gf: 0, ga: 0 };
           table[nm].played++; table[nm].gf += gf; table[nm].ga += ga;
         }
+        const c = compOf(ev);
+        history[lg.name].push({ d: (c.date || '').slice(0, 10), h: h.name, a: a.name, hg: h.score, ag: a.score });
       }
       await sleep(8000);
       // Next 7 days -> upcoming fixtures.
@@ -105,7 +111,7 @@ async function load() {
     }
   }
   fixtures.sort((a, b) => new Date(a.date) - new Date(b.date));
-  return { fixtures, tables, fetched };
+  return { fixtures, tables, history, fetched };
 }
 
 // Scores for graded matches: {fixtureId: 'H-A'} for finished ones.

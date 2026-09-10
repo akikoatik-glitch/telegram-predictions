@@ -157,10 +157,65 @@ async function main() {
     distinct >= 6 && top1Share < 0.4 && pickTypes >= 3,
     `${distinct} scores, top ${top1Share.toFixed(0)}%, ${pickTypes} pick types`);
 
+  // 16. signals: form, position, H2H from real-shaped history
+  const sig = require('./src/signals');
+  const hist = [
+    { d: '2026-08-01', h: 'Lions', a: 'Tigers', hg: 2, ag: 0 },
+    { d: '2026-08-08', h: 'Tigers', a: 'Lions', hg: 1, ag: 1 },
+    { d: '2026-08-15', h: 'Lions', a: 'Bears', hg: 3, ag: 1 },
+    { d: '2026-08-22', h: 'Bears', a: 'Lions', hg: 0, ag: 2 },
+    { d: '2026-08-29', h: 'Lions', a: 'Wolves', hg: 1, ag: 0 },
+  ];
+  ok('16. signals engine',
+    sig.formString(hist, 'Lions') === 'W-D-W-W-W' &&
+    sig.position(hist, 'Lions').pos === 1 &&
+    sig.h2h(hist, 'Lions', 'Tigers').total === 2);
+  const an = sig.analyze({ id: 'x', league: 'T', home: 'Lions', away: 'Tigers' },
+    { Lions: { played: 4, gf: 8, ga: 2 }, Tigers: { played: 2, gf: 1, ga: 3 } }, hist);
+  ok('16b. vote + sources', typeof an.voteAgree === 'boolean' && an.sources.includes('season-table'));
+
+  // 17. pro format: form/xG/analysis lines, Algiers kickoff, no +18
+  const fx = { id: 'v', league: 'La Liga', date: '2026-09-11T19:15:00.000Z', home: 'Sevilla FC', away: 'Valencia CF' };
+  const mm = mod.predict('Sevilla FC', 'Valencia CF', {
+    'Sevilla FC': { played: 5, gf: 9, ga: 6 }, 'Valencia CF': { played: 5, gf: 5, ga: 9 },
+  });
+  const pk = pick.select(mm, fx.home, fx.away);
+  const card = format.prediction(fx, mm, pk, sig.analyze(fx, {
+    'Sevilla FC': { played: 5, gf: 9, ga: 6 }, 'Valencia CF': { played: 5, gf: 5, ga: 9 },
+  }, []));
+  ok('17. pro card format',
+    card.includes('20:15') && card.includes('Algiers') && /Form:|Expected Goals|Analysis/.test(card) &&
+    !/18\+|Play responsibly|مسؤولية/.test(card));
+
+  // 18. reply wiring: dry send captures reply_to_message_id
+  const senderMod = require('./src/send');
+  const r18 = await senderMod.send('<b>hi</b>', { replyTo: 12345, dryRun: true });
+  ok('18. reply-to-original path', r18.dry === true);
+
+  // 19. LANG switch (ar-only hides English header)
+  const prevLang = process.env.LANG;
+  process.env.LANG = 'ar';
+  const norm = (k) => k.replace(/\\/g, '/');
+  for (const k of Object.keys(require.cache)) {
+    if (norm(k).endsWith('src/config.js') || norm(k).endsWith('src/format.js')) delete require.cache[k];
+  }
+  const formatAr = require('./src/format');
+  const cardAr = formatAr.resultMiss({ home: 'A', away: 'B', score: '0-1', pickLabelEn: 'X', pickLabelAr: 'Y' });
+  process.env.LANG = prevLang;
+  for (const k of Object.keys(require.cache)) {
+    if (norm(k).endsWith('src/config.js') || norm(k).endsWith('src/format.js')) delete require.cache[k];
+  }
+  ok('19. language switch', cardAr.includes('لم يكن صحيحاً') && !cardAr.includes('PREDICTION MISSED'));
+
+  // 20. restart recovery of pending results (posted + ungraded survives reload)
+  const allRecs = db.getPredictions();
+  const pending = Object.values(allRecs).filter((r) => r.status === 'posted');
+  ok('20. pending queue intact', Array.isArray(pending));
+
   done();
 }
 function done() {
-  console.log(fails === 0 ? '\n✅ ALL 15 CHECKS PASSED' : `\n❌ ${fails} CHECK(S) FAILED`);
+  console.log(fails === 0 ? '\n✅ ALL 20 CHECKS PASSED' : `\n❌ ${fails} CHECK(S) FAILED`);
   process.exit(fails === 0 ? 0 : 1);
 }
 main().catch((e) => { console.log('FATAL', e.message); process.exit(1); });

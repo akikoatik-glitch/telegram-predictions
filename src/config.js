@@ -13,6 +13,7 @@ function str(name, def) {
 
 const LEAGUES = [
   { key: 'pl',  name: 'Premier League',    file: 'en.1', apiId: 39,  tz: 'Europe/London', enabled: true },
+  { key: 'ch',  name: 'Championship',      file: 'en.2', apiId: 40,  tz: 'Europe/London', enabled: true },
   { key: 'lal', name: 'La Liga',           file: 'es.1', apiId: 140, tz: 'CET',           enabled: true },
   { key: 'sa',  name: 'Serie A',           file: 'it.1', apiId: 135, tz: 'CET',           enabled: true },
   { key: 'bl',  name: 'Bundesliga',        file: 'de.1', apiId: 78,  tz: 'CET',           enabled: true },
@@ -22,6 +23,11 @@ const LEAGUES = [
   { key: 'bel', name: 'Belgian Pro League',file: null,   apiId: 144, tz: 'CET', espn: null, txt: { repo: 'openfootball/belgium', file: 'be1.txt' }, enabled: true },
   { key: 'tur', name: 'Turkish Super Lig', file: null,   apiId: 203, tz: 'TRT', espn: 'tur.1', enabled: true },
   { key: 'sau', name: 'Saudi Pro League',  file: null,   apiId: 307, tz: 'AST', espn: 'ksa.1', enabled: true },
+  { key: 'mls', name: 'MLS',               file: null,   apiId: null, tz: 'US-Eastern', espn: 'usa.1', enabled: true },
+  { key: 'mx',  name: 'Liga MX',           file: null,   apiId: null, tz: 'US-Central', espn: 'mex.1', enabled: true },
+  { key: 'bra', name: 'Brasileirao',       file: null,   apiId: null, tz: 'Brazil', espn: 'bra.1', enabled: true },
+  { key: 'arg', name: 'Liga Profesional',  file: null,   apiId: null, tz: 'Argentina', espn: 'arg.1', enabled: true },
+  { key: 'gre', name: 'Super League Greece', file: null, apiId: null, tz: 'CET', espn: 'gre.1', enabled: true },
 ];
 
 // Posting window derived from one knob: PREDICTION_MINUTES_BEFORE_KICKOFF.
@@ -40,6 +46,7 @@ module.exports = {
   ofBase: 'https://raw.githubusercontent.com/openfootball/football.json/master/',
   season: str('SEASON', '2026-27'),
   lang: str('LANG', 'both'), // both | ar | en
+  displayTz: str('DISPLAY_TZ', 'Africa/Algiers'), // kickoff shown in this zone
   leadMin: num('LEAD_MINUTES_MIN', Math.max(2, target - spread)),
   leadMax: num('LEAD_MINUTES_MAX', target + 5),
   targetKickoffLead: target,

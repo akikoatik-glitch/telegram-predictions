@@ -8,13 +8,13 @@ try {
     });
 } catch {}
 // PRE-MATCH job (runs every 10 min): post cached matches kicking off
-// inside [LEAD_MIN, LEAD_MAX] minutes that have no DB record yet.
-// Skips anything below MIN_CONFIDENCE. Full record stored in the DB.
+// inside the window that have no DB record yet. Model vote adjusts
+// confidence (agreement +3, disagreement capped at 74); anything below
+// MIN_CONFIDENCE is skipped, never published weak.
 const fs = require('fs');
 const path = require('path');
 const config = require('./src/config');
-const model = require('./src/model');
-const pick = require('./src/pick');
+const signals = require('./src/signals');
 const format = require('./src/format');
 const sender = require('./src/send');
 const db = require('./src/db');
@@ -27,7 +27,7 @@ async function main() {
   const cache = JSON.parse(fs.readFileSync(CACHE, 'utf8'));
   const records = db.getPredictions();
   const today = new Date().toISOString().slice(0, 10);
-  const postedToday = Object.values(records).filter((r) => r.day === today).length;
+  const postedToday = Object.values(records).filter((r) => r.day === today && r.status === 'posted').length;
 
   const now = Date.now();
   const due = cache.fixtures.filter((f) => {
@@ -40,40 +40,54 @@ async function main() {
   for (const fx of due) {
     if (postedToday + sent >= config.maxPostsPerDay) { console.log('daily cap reached'); break; }
     const table = cache.tables[fx.league] || {};
-    const m = model.predict(fx.home, fx.away, table);
-    const best = pick.select(m, fx.home, fx.away);
-    if (m.confidence < config.minConfidence || !best) {
-      console.log(`skip ${fx.home} vs ${fx.away} (confidence ${m.confidence}, no eligible pick)`);
-      records[fx.id] = skippedRecord(fx, m, today);
+    const history = (cache.history && cache.history[fx.league]) || [];
+    const sig = signals.analyze(fx, table, history);
+    if (!sig.pick) {
+      console.log(`skip ${fx.home} vs ${fx.away} (no eligible pick)`);
+      records[fx.id] = skippedRecord(fx, sig.model.confidence, today);
       continue;
     }
-    const msg = format.prediction(fx, m, best);
+    // Model vote: agreement lifts slightly, disagreement caps hard.
+    let conf = sig.model.confidence;
+    if (sig.voteAgree) conf = Math.min(92, conf + 3);
+    else conf = Math.min(conf, 74);
+    if (conf < config.minConfidence) {
+      console.log(`skip ${fx.home} vs ${fx.away} (confidence ${conf}${sig.voteAgree ? '' : ', models disagree'})`);
+      records[fx.id] = skippedRecord(fx, conf, today);
+      continue;
+    }
+    const msg = format.prediction(fx, { ...sig.model, confidence: conf }, sig.pick, sig);
     const res = await sender.send(msg);
     records[fx.id] = {
       id: fx.id, league: fx.league, home: fx.home, away: fx.away,
       kickoff: fx.date, day: today,
-      pickType: best.type, pickLabelEn: best.labelEn, pickLabelAr: best.labelAr,
-      confidence: m.confidence, bandEn: best.band.en, bandAr: best.band.ar,
-      probs: { p1: m.p1, px: m.px, p2: m.p2, over25: m.over25, bttsYes: m.bttsYes, score: m.topScores[0].score },
+      pickType: sig.pick.type, pickLabelEn: sig.pick.labelEn, pickLabelAr: sig.pick.labelAr,
+      confidence: conf, bandEn: sig.pick.band.en, bandAr: sig.pick.band.ar,
+      probs: { p1: sig.model.p1, px: sig.model.px, p2: sig.model.p2, over25: sig.model.over25, bttsYes: sig.model.bttsYes, score: sig.model.topScores[0].score },
+      formH: sig.formH, formA: sig.formA,
+      posH: sig.posH ? `${sig.posH.pos}/${sig.posH.of}` : null,
+      posA: sig.posA ? `${sig.posA.pos}/${sig.posA.of}` : null,
+      signals: { voteAgree: sig.voteAgree, formPick: sig.formPickType, sources: sig.sources },
       postedAt: new Date().toISOString(),
       messageId: res.messageId || null, dry: !!res.dry,
       status: 'posted', score: null, won: null,
       gradedAt: null, source: fx.source || 'openfootball', model: config.modelVersion,
     };
     sent++;
-    console.log(`${res.dry ? '[dry] ' : ''}posted #${fx.id}: ${fx.home} vs ${fx.away} -> ${best.type} ${best.prob}% (conf ${m.confidence})`);
+    console.log(`${res.dry ? '[dry] ' : ''}posted #${fx.id}: ${fx.home} vs ${fx.away} -> ${sig.pick.type} ${sig.pick.prob}% (conf ${conf}${sig.voteAgree ? '' : ', disagree'})`);
     await sender.sleep(2500);
   }
   db.savePredictions(records);
   console.log(`done: ${sent} posted`);
 }
 
-function skippedRecord(fx, m, today) {
+function skippedRecord(fx, conf, today) {
   return {
     id: fx.id, league: fx.league, home: fx.home, away: fx.away,
     kickoff: fx.date, day: today, pickType: 'SKIP', pickLabelEn: 'skipped (low confidence)',
-    pickLabelAr: 'تم التخطي (ثقة منخفضة)', confidence: m.confidence,
-    bandEn: 'Low', bandAr: 'منخفض', probs: null, postedAt: null,
+    pickLabelAr: 'تم التخطي (ثقة منخفضة)', confidence: conf,
+    bandEn: 'Low', bandAr: 'منخفض', probs: null, formH: null, formA: null,
+    posH: null, posA: null, signals: null, postedAt: null,
     messageId: null, dry: false, status: 'skipped', score: null,
     won: null, gradedAt: null, source: fx.source || 'openfootball', model: config.modelVersion,
   };

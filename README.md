@@ -26,12 +26,12 @@ API-Football (free key) ─────┘        ▲                  ▲      
 
 | League | Free source, no key |
 |---|---|
-| Premier League, La Liga, Serie A, Bundesliga, Ligue 1, Eredivisie, Primeira Liga | openfootball schedules + results |
+| Premier League, Championship, La Liga, Serie A, Bundesliga, Ligue 1, Eredivisie, Primeira Liga | openfootball schedules + results |
 | Belgian Pro League | belgium be1.txt schedule + results |
-| Turkish Süper Lig, Saudi Pro League | ESPN scoreboards (exact UTC, polite volume) |
+| Turkish Süper Lig, Saudi Pro League, MLS, Liga MX, Brasileirao, Liga Profesional, Super League Greece | ESPN scoreboards (exact UTC, polite volume) |
 
-All 10 first divisions work with zero keys. An optional free
-api-football.com key switches everything to exact-UTC standings-based data
+All first divisions work with zero keys. An optional free
+api-football.com key switches covered leagues to exact-UTC standings data
 and unlocks UCL/UEL — the code detects it automatically. Matches without a
 published kickoff time are counted and skipped, never guessed.
 
@@ -49,11 +49,14 @@ published kickoff time are counted and skipped, never guessed.
 ## Admin without a server (no /commands needed on free tier)
 
 - **Pause**: repo → Settings → Variables → new variable `PAUSED=true`
-  (delete it to resume). Also `LANG`, timing, `MIN_CONFIDENCE`,
-  `MAX_POSTS_PER_DAY` via workflow `env:`.
+  (delete it to resume). Timing (`PREDICTION_MINUTES_BEFORE_KICKOFF`),
+  `MIN_CONFIDENCE`, `MAX_POSTS_PER_DAY`, `LANG`, `DISPLAY_TZ` and league
+  on/off switches live in workflow `env:` + `src/config.js`.
 - **Manual runs**: Actions → Run workflow → mode `post|fetch|results`.
 - **Stats**: `npm run stats` locally, `STATS.md` in repo, weekly summary
   auto-posted to the channel every Monday.
+- **Results reply to the original prediction** automatically (falls back to
+  a standalone post if the original was deleted).
 
 ## Honesty rules enforced in code
 

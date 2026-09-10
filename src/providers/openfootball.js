@@ -16,14 +16,18 @@ function isPlayed(m) {
 async function load() {
   const fixtures = [];
   const tables = {};
+  const history = {}; // league -> [{d,h,a,hg,ag}] in file (chronological) order
   const missing = [];
-  for (const lg of config.LEAGUES.filter((l) => l.file)) {
+  // Leagues already covered by API-Football (when a key exists) are
+  // skipped here — same real matches under two id schemes would post twice.
+  for (const lg of config.LEAGUES.filter((l) => l.file && (!config.apiKey || !l.apiId))) {
     const url = `${config.ofBase}${config.season}/${lg.file}.json`;
     let res;
     try { res = await fetch(url); } catch (e) { missing.push(`${lg.name} (network: ${e.message})`); continue; }
     if (!res.ok) { missing.push(`${lg.name} (HTTP ${res.status} — file not published yet?)`); continue; }
     const json = await res.json();
     const table = {};
+    history[lg.name] = [];
     let up = 0, done = 0;
     for (const m of (json.matches || [])) {
       const ht = (m.team1 || '').trim(), at = (m.team2 || '').trim();
@@ -35,6 +39,7 @@ async function load() {
           table[nm] = table[nm] || { played: 0, gf: 0, ga: 0 };
           table[nm].played++; table[nm].gf += gf; table[nm].ga += ga;
         }
+        history[lg.name].push({ d: m.date, h: ht, a: at, hg, ag });
       } else {
         up++;
         fixtures.push({
@@ -51,9 +56,9 @@ async function load() {
     tables[lg.name] = table;
     console.log(`openfootball ${lg.name}: ${up} upcoming, ${done} played`);
   }
-  if (missing.length) console.log('unavailable without API key: ' + missing.join(' | '));
+  if (missing.length) console.log('openfootball missing: ' + missing.join(' | '));
   fixtures.sort((a, b) => new Date(a.date) - new Date(b.date));
-  return { fixtures, tables };
+  return { fixtures, tables, history };
 }
 
 // Re-read finished scores for grading: returns {fixtureId: 'H-A'} for

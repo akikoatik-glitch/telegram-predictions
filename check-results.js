@@ -64,7 +64,9 @@ async function main() {
     rec.gradedAt = new Date().toISOString();
     const msg = won ? format.resultWin(rec) : format.resultMiss(rec);
     try {
-      await sender.send(msg);
+      // Reply directly under the ORIGINAL prediction (falls back to a
+      // standalone post if the original was deleted).
+      await sender.send(msg, { replyTo: rec.messageId || undefined });
       console.log(`${won ? 'WIN' : 'MISS'} ${rec.home} ${score} ${rec.away} (${rec.pickType})`);
     } catch (e) {
       console.log(`result post failed for ${id}: ${e.message} (graded anyway)`);
