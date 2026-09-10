@@ -30,8 +30,12 @@ jobs:
           git config user.name "predictions-bot"
           git config user.email "predictions-bot@users.noreply.github.com"
           git add data/cache.json
-          git diff --cached --quiet || git commit -m "fixtures refresh $(date -u +%Y-%m-%d)"
-          git push
+          git diff --cached --quiet && echo "no changes" && exit 0
+          git commit -m "fixtures refresh $(date -u +%Y-%m-%d)"
+          for i in 1 2 3 4 5; do
+            git pull --rebase origin main && git push && break
+            echo "push race with sibling job, retry $i"; sleep 5
+          done
 
   post:
     runs-on: ubuntu-latest
@@ -56,5 +60,9 @@ jobs:
           git config user.name "predictions-bot"
           git config user.email "predictions-bot@users.noreply.github.com"
           git add data/posted.json
-          git diff --cached --quiet || git commit -m "posted log $(date -u +%Y-%m-%dT%H:%MZ)"
-          git push
+          git diff --cached --quiet && echo "no changes" && exit 0
+          git commit -m "posted log $(date -u +%Y-%m-%dT%H:%MZ)"
+          for i in 1 2 3 4 5; do
+            git pull --rebase origin main && git push && break
+            echo "push race with sibling job, retry $i"; sleep 5
+          done
