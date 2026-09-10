@@ -1,1 +1,33 @@
-{}
+{
+ "of-pt.1-2026-09-10-20:15-cf-estrela-da-amadora-v-sporting-clube-de-braga": {
+  "id": "of-pt.1-2026-09-10-20:15-cf-estrela-da-amadora-v-sporting-clube-de-braga",
+  "league": "Primeira Liga",
+  "home": "CF Estrela da Amadora",
+  "away": "Sporting Clube de Braga",
+  "kickoff": "2026-09-10T19:15:00.000Z",
+  "day": "2026-09-10",
+  "pickType": "1X",
+  "pickLabelEn": "CF Estrela da Amadora or Draw",
+  "pickLabelAr": "CF Estrela da Amadora أو التعادل",
+  "confidence": 60,
+  "bandEn": "Medium",
+  "bandAr": "متوسط",
+  "probs": {
+   "p1": 45,
+   "px": 23,
+   "p2": 32,
+   "over25": 63,
+   "bttsYes": 64,
+   "score": "1-1"
+  },
+  "postedAt": "2026-09-10T18:58:59.631Z",
+  "messageId": 893,
+  "dry": false,
+  "status": "posted",
+  "score": null,
+  "won": null,
+  "gradedAt": null,
+  "source": "openfootball",
+  "model": "poisson-v2"
+ }
+}
