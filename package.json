@@ -1,0 +1,16 @@
+{
+  "name": "telegram-predictions",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Daily automatic football predictions poster for Telegram groups — top 10 leagues, posts before every match, Arabic + English.",
+  "type": "commonjs",
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "scripts": {
+    "fetch": "node fetch-fixtures.js",
+    "post": "node post-due.js",
+    "test": "node test-dry.js"
+  },
+  "license": "MIT"
+}

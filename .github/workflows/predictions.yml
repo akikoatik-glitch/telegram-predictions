@@ -1,0 +1,60 @@
+name: Football predictions poster
+
+on:
+  schedule:
+    # Daily fixtures refresh (06:00 UTC) — caches next 2 days, top 10 leagues
+    - cron: '0 6 * * *'
+    # Match check every hour — posts matches kicking off in 60-180 minutes
+    - cron: '15 * * * *'
+  workflow_dispatch: # manual "Run workflow" button
+
+permissions:
+  contents: write
+
+jobs:
+  fetch:
+    if: github.event.schedule == '0 6 * * *' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node fetch-fixtures.js
+        env:
+          API_FOOTBALL_KEY: ${{ secrets.API_FOOTBALL_KEY }}
+          SEASON: '2025'
+      - name: Commit fresh cache
+        run: |
+          git config user.name "predictions-bot"
+          git config user.email "predictions-bot@users.noreply.github.com"
+          git add data/cache.json
+          git diff --cached --quiet || git commit -m "fixtures refresh $(date -u +%Y-%m-%d)"
+          git push
+
+  post:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node post-due.js
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          API_FOOTBALL_KEY: ${{ secrets.API_FOOTBALL_KEY }}
+          SEASON: '2025'
+          LEAD_MINUTES_MIN: '45'
+          LEAD_MINUTES_MAX: '240'
+          MAX_POSTS_PER_DAY: '15'
+          MIN_CONFIDENCE: '55'
+      - name: Commit posted log
+        run: |
+          git config user.name "predictions-bot"
+          git config user.email "predictions-bot@users.noreply.github.com"
+          git add data/posted.json
+          git diff --cached --quiet || git commit -m "posted log $(date -u +%Y-%m-%dT%H:%MZ)"
+          git push
