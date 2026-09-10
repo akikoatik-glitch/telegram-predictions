@@ -51,8 +51,8 @@ function prediction(fx, m, pick) {
   L.push(`🎯 Likely score / النتيجة المتوقعة: <b>${esc(m.topScores[0].score)}</b> (${m.topScores[0].prob}%)`);
   L.push('');
   L.push(`<i>${block(
-    'احتمالات إحصائية وليست ضمانات • العب بمسؤولية +18',
-    'Statistical probabilities, not guarantees • Play responsibly 18+'
+    'احتمالات إحصائية وليست ضمانات',
+    'Statistical probabilities, not guarantees'
   )}</i>`);
   return L.join('\n');
 }

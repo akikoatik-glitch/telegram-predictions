@@ -63,8 +63,7 @@ async function main() {
     C: { played: 10, gf: 15, ga: 14 }, D: { played: 10, gf: 14, ga: 15 },
   };
   const p = mod.predict('A', 'B', synth);
-  ok('5. prediction generation', Math.abs(p.p1 + p.px + p.p2 - 100) <= 2 && p.topScores.length === 3);
-  const band = pick.band(p.confidence);
+  ok('5. prediction generation', Math.abs(p.p1 + p.px + p.p2 - 100) <= 2 && p.topScores.length === 3);  const band = pick.band(p.confidence);
   ok('6. confidence bands', ['Extremely High', 'Very High', 'High', 'Medium', 'Low'].includes(band.en), p.confidence + ' -> ' + band.en);
 
   // 7. timezone conversion incl. DST edges
