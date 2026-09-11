@@ -29,5 +29,49 @@
   "gradedAt": null,
   "source": "openfootball",
   "model": "poisson-v2"
+ },
+ "of-nl.1-2026-09-11-20:00-az-v-willem-ii-tilburg": {
+  "id": "of-nl.1-2026-09-11-20:00-az-v-willem-ii-tilburg",
+  "league": "Eredivisie",
+  "home": "AZ",
+  "away": "Willem II Tilburg",
+  "kickoff": "2026-09-11T18:00:00.000Z",
+  "day": "2026-09-11",
+  "pickType": "1X",
+  "pickLabelEn": "AZ or Draw",
+  "pickLabelAr": "AZ أو التعادل",
+  "confidence": 92,
+  "bandEn": "Extremely High",
+  "bandAr": "مرتفع جداً جداً",
+  "probs": {
+   "p1": 76,
+   "px": 15,
+   "p2": 8,
+   "over25": 62,
+   "bttsYes": 46,
+   "score": "2-0"
+  },
+  "formH": "W-W-W-W-W",
+  "formA": "L-L-D-L",
+  "posH": "1/18",
+  "posA": "17/18",
+  "signals": {
+   "voteAgree": true,
+   "formPick": "1X",
+   "sources": [
+    "season-table",
+    "recent-form",
+    "home-away-split"
+   ]
+  },
+  "postedAt": "2026-09-11T17:46:51.117Z",
+  "messageId": 894,
+  "dry": false,
+  "status": "posted",
+  "score": null,
+  "won": null,
+  "gradedAt": null,
+  "source": "openfootball",
+  "model": "poisson-v2"
  }
 }
