@@ -205,5 +205,93 @@
   "gradedAt": null,
   "source": "opentxt",
   "model": "poisson-v2"
+ },
+ "of-en.2-2026-09-11-20:00-west-ham-united-fc-v-wrexham-afc": {
+  "id": "of-en.2-2026-09-11-20:00-west-ham-united-fc-v-wrexham-afc",
+  "league": "Championship",
+  "home": "West Ham United FC",
+  "away": "Wrexham AFC",
+  "kickoff": "2026-09-11T19:00:00.000Z",
+  "day": "2026-09-11",
+  "pickType": "1X",
+  "pickLabelEn": "West Ham United FC or Draw",
+  "pickLabelAr": "West Ham United FC أو التعادل",
+  "confidence": 71,
+  "bandEn": "High",
+  "bandAr": "مرتفع",
+  "probs": {
+   "p1": 49,
+   "px": 25,
+   "p2": 26,
+   "over25": 51,
+   "bttsYes": 53,
+   "score": "1-1"
+  },
+  "formH": "D-L-D-W-W",
+  "formA": "D-D-L-W",
+  "posH": "9/24",
+  "posA": "15/24",
+  "signals": {
+   "voteAgree": false,
+   "formPick": "U35",
+   "sources": [
+    "season-table",
+    "recent-form",
+    "home-away-split"
+   ]
+  },
+  "postedAt": "2026-09-11T18:42:46.036Z",
+  "messageId": 898,
+  "dry": false,
+  "status": "posted",
+  "score": null,
+  "won": null,
+  "gradedAt": null,
+  "source": "openfootball",
+  "model": "poisson-v2"
+ },
+ "of-es.1-2026-09-11-21:00-sevilla-fc-v-valencia-cf": {
+  "id": "of-es.1-2026-09-11-21:00-sevilla-fc-v-valencia-cf",
+  "league": "La Liga",
+  "home": "Sevilla FC",
+  "away": "Valencia CF",
+  "kickoff": "2026-09-11T19:00:00.000Z",
+  "day": "2026-09-11",
+  "pickType": "1X",
+  "pickLabelEn": "Sevilla FC or Draw",
+  "pickLabelAr": "Sevilla FC أو التعادل",
+  "confidence": 91,
+  "bandEn": "Very High",
+  "bandAr": "مرتفع جداً",
+  "probs": {
+   "p1": 63,
+   "px": 21,
+   "p2": 16,
+   "over25": 54,
+   "bttsYes": 50,
+   "score": "1-0"
+  },
+  "formH": "W-W-L-D",
+  "formA": "L-L-L",
+  "posH": "6/20",
+  "posA": "20/20",
+  "signals": {
+   "voteAgree": true,
+   "formPick": "1X",
+   "sources": [
+    "season-table",
+    "recent-form",
+    "home-away-split"
+   ]
+  },
+  "postedAt": "2026-09-11T18:42:48.726Z",
+  "messageId": 899,
+  "dry": false,
+  "status": "posted",
+  "score": null,
+  "won": null,
+  "gradedAt": null,
+  "source": "openfootball",
+  "model": "poisson-v2"
  }
 }
