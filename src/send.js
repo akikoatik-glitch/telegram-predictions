@@ -48,4 +48,64 @@ function sleep(ms) {
   return new Promise((r) => setTimeout(r, ms));
 }
 
-module.exports = { send, sleep };
+async function tg(method, body) {
+  for (let attempt = 1; attempt <= 3; attempt++) {
+    const res = await fetch(`https://api.telegram.org/bot${config.telegramToken}/${method}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+    const json = await res.json().catch(() => ({}));
+    if (json.ok) return json;
+    if (res.status === 429 && attempt < 3) {
+      const wait = Math.min(60000, ((json.parameters && json.parameters.retry_after) || 5) * 1000);
+      console.log(`telegram 429, backing off ${wait}ms`);
+      await sleep(wait);
+      continue;
+    }
+    const err = new Error('Telegram rejected ' + method + ': ' + (json.description || res.status));
+    err.tgDescription = json.description || '';
+    throw err;
+  }
+  throw new Error('Telegram rate-limited after retries');
+}
+
+// Photo / album sending for club logos. Chain: pair album -> single
+// photo -> plain text. Never breaks posting when images fail.
+async function sendPhotoOrText(fx, logos, caption, opts = {}) {
+  const lh = logos[fx.home] || null;
+  const la = logos[fx.away] || null;
+  if (opts.dryRun || !config.telegramToken || !config.chatId) {
+    return send(caption, opts);
+  }
+  if (lh && la) {
+    try {
+      const json = await tg('sendMediaGroup', {
+        chat_id: config.chatId,
+        media: [
+          { type: 'photo', media: lh, caption, parse_mode: 'HTML' },
+          { type: 'photo', media: la },
+        ],
+      });
+      const ids = (json.result || []).map((m) => m.message_id).filter(Boolean);
+      return { ok: true, messageId: ids[0] || null, mediaIds: ids };
+    } catch (e) {
+      console.log('album failed, falling back to single photo: ' + e.message);
+    }
+  }
+  const one = lh || la;
+  if (one) {
+    try {
+      const json = await tg('sendPhoto', {
+        chat_id: config.chatId, photo: one,
+        caption, parse_mode: 'HTML',
+      });
+      return { ok: true, messageId: json.result.message_id };
+    } catch (e) {
+      console.log('photo failed, falling back to text: ' + e.message);
+    }
+  }
+  return send(caption, opts);
+}
+
+module.exports = { send, sendPhotoOrText, sleep };

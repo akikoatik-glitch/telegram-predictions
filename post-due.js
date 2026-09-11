@@ -2,7 +2,7 @@
 // Local .env loader (git-ignored; GitHub Actions uses Secrets instead).
 try {
   require('fs').readFileSync(require('path').join(__dirname, '.env'), 'utf8')
-    .split('\n').forEach((l) => {
+    .split(/\r?\n/).forEach((l) => {
       const m = l.match(/^([A-Z_]+)=(.*)$/);
       if (m && !process.env[m[1]]) process.env[m[1]] = m[2].trim();
     });
@@ -56,12 +56,13 @@ async function main() {
       records[fx.id] = skippedRecord(fx, conf, today);
       continue;
     }
-    const msg = format.prediction(fx, { ...sig.model, confidence: conf }, sig.pick, sig);
-    const res = await sender.send(msg);
+    const msg = format.prediction(fx, { ...sig.model, confidence: conf }, sig.pick);
+    const res = await sender.sendPhotoOrText(fx, cache.logos || {}, msg);
     records[fx.id] = {
       id: fx.id, league: fx.league, home: fx.home, away: fx.away,
       kickoff: fx.date, day: today,
-      pickType: sig.pick.type, pickLabelEn: sig.pick.labelEn, pickLabelAr: sig.pick.labelAr,
+      pickType: sig.pick.type, pickLabelEn: format.enPick(sig.pick.type, fx.home, fx.away),
+      pickLabelAr: format.arPick(sig.pick.type, fx.home, fx.away),
       confidence: conf, bandEn: sig.pick.band.en, bandAr: sig.pick.band.ar,
       probs: { p1: sig.model.p1, px: sig.model.px, p2: sig.model.p2, over25: sig.model.over25, bttsYes: sig.model.bttsYes, score: sig.model.topScores[0].score },
       formH: sig.formH, formA: sig.formA,

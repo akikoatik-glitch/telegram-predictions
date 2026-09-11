@@ -19,15 +19,22 @@ async function main() {
     ok('1. application loads', true);
   } catch (e) { ok('1. application loads', false, e.message); return done(); }
 
-  // 2. telegram connection (read-only getMe, local .env token)
+  // 2. telegram connection (read-only getMe, local .env token, 3 tries)
   try {
     const env = {};
-    fs.readFileSync(path.join(__dirname, '.env'), 'utf8').split('\n').forEach((l) => {
+    fs.readFileSync(path.join(__dirname, '.env'), 'utf8').split(/\r?\n/).forEach((l) => {
       const m = l.match(/^([A-Z_]+)=(.*)$/); if (m) env[m[1]] = m[2].trim();
     });
-    const r = await fetch('https://api.telegram.org/bot' + env.TELEGRAM_BOT_TOKEN + '/getMe');
-    const j = await r.json();
-    ok('2. telegram connection', !!j.ok, j.ok ? '@' + j.result.username : j.description);
+    let j = null, lastErr = '';
+    for (let i = 0; i < 3; i++) {
+      try {
+        const r = await fetch('https://api.telegram.org/bot' + env.TELEGRAM_BOT_TOKEN + '/getMe');
+        j = await r.json();
+        if (j.ok) break;
+        lastErr = j.description || r.status;
+      } catch (e) { lastErr = e.message; await new Promise((r) => setTimeout(r, 5000)); }
+    }
+    ok('2. telegram connection', !!(j && j.ok), j && j.ok ? '@' + j.result.username : lastErr);
   } catch (e) { ok('2. telegram connection', false, e.message); }
 
   // 3-4. data sources: real league files, real upcoming fixtures
@@ -115,11 +122,11 @@ async function main() {
   };
   ok('10. final-result checking', gradeCases.every(([t, s, w]) => grade(t, s) === w));
 
-  // 11-12. result message formats
-  const rec = { home: 'Man City', away: 'Arsenal', score: '2-1', pickLabelEn: 'Man City to Win', pickLabelAr: 'فوز مان سيتي', confidence: 78 };
+  // 11-12. result message formats (short Darija, reply-ready)
+  const rec = { id: 'r1', home: 'Man City', away: 'Arsenal', score: '2-1', pickLabelEn: 'Man City to Win', pickLabelAr: 'فوز مان سيتي', confidence: 78 };
   const win = format.resultWin(rec), miss = format.resultMiss({ ...rec, score: '0-1' });
-  ok('11. WIN message', win.includes('PREDICTION CORRECT') && win.includes('فوز مان سيتي') && win.includes('2-1') && !/100%|guaranteed/i.test(win));
-  ok('12. MISS message', miss.includes('PREDICTION MISSED') && miss.includes('لم يكن صحيحاً') && miss.includes('0-1'));
+  ok('11. WIN message', win.includes('2-1') && /مبروك|تخلص|بلاصتها|ضرب|الخدمة|صحيح|الجيب|قلتلكم/.test(win) && !/100%|guaranteed|🇸🇦/.test(win));
+  ok('12. MISS message', miss.includes('ما دخلش') && miss.includes('0-1') && !/🇸🇦/.test(miss));
 
   // 13-14. DB persistence + restart recovery (backup, test, restore)
   const predFile = db.PRED;
@@ -174,18 +181,18 @@ async function main() {
     { Lions: { played: 4, gf: 8, ga: 2 }, Tigers: { played: 2, gf: 1, ga: 3 } }, hist);
   ok('16b. vote + sources', typeof an.voteAgree === 'boolean' && an.sources.includes('season-table'));
 
-  // 17. pro format: form/xG/analysis lines, Algiers kickoff, no +18
+  // 17. short Arabic card: match + ONE pick + confidence, no extras
   const fx = { id: 'v', league: 'La Liga', date: '2026-09-11T19:15:00.000Z', home: 'Sevilla FC', away: 'Valencia CF' };
   const mm = mod.predict('Sevilla FC', 'Valencia CF', {
     'Sevilla FC': { played: 5, gf: 9, ga: 6 }, 'Valencia CF': { played: 5, gf: 5, ga: 9 },
   });
   const pk = pick.select(mm, fx.home, fx.away);
-  const card = format.prediction(fx, mm, pk, sig.analyze(fx, {
-    'Sevilla FC': { played: 5, gf: 9, ga: 6 }, 'Valencia CF': { played: 5, gf: 5, ga: 9 },
-  }, []));
-  ok('17. pro card format',
-    card.includes('20:15') && card.includes('Algiers') && /Form:|Expected Goals|Analysis/.test(card) &&
-    !/18\+|Play responsibly|مسؤولية/.test(card));
+  const card = format.prediction(fx, mm, pk);
+  const cardLines = card.split('\n').filter((l) => l.trim()).length;
+  ok('17. short Arabic card',
+    card.includes('إشبيلية') && card.includes('فالنسيا') &&
+    /التوقع:/.test(card) && /الثقة: <b>\d+%/.test(card) && cardLines <= 5 &&
+    !/18\+|Play responsibly|مسؤولية|🇸🇦|Expected Goals|Analysis|Form:/.test(card));
 
   // 18. reply wiring: dry send captures reply_to_message_id
   const senderMod = require('./src/send');
@@ -200,22 +207,44 @@ async function main() {
     if (norm(k).endsWith('src/config.js') || norm(k).endsWith('src/format.js')) delete require.cache[k];
   }
   const formatAr = require('./src/format');
-  const cardAr = formatAr.resultMiss({ home: 'A', away: 'B', score: '0-1', pickLabelEn: 'X', pickLabelAr: 'Y' });
+  const cardAr = formatAr.resultMiss({ id: 'z', home: 'A', away: 'B', score: '0-1', pickLabelEn: 'X', pickLabelAr: 'Y' });
   process.env.LANG = prevLang;
   for (const k of Object.keys(require.cache)) {
     if (norm(k).endsWith('src/config.js') || norm(k).endsWith('src/format.js')) delete require.cache[k];
   }
-  ok('19. language switch', cardAr.includes('لم يكن صحيحاً') && !cardAr.includes('PREDICTION MISSED'));
+  ok('19. language switch', cardAr.includes('ما دخلش') && !cardAr.includes('PREDICTION MISSED'));
 
   // 20. restart recovery of pending results (posted + ungraded survives reload)
   const allRecs = db.getPredictions();
   const pending = Object.values(allRecs).filter((r) => r.status === 'posted');
   ok('20. pending queue intact', Array.isArray(pending));
 
+  // 21. Arabic team names: giants localized, minnows untouched
+  const { arName } = require('./src/arnames');
+  ok('21. club name localization',
+    arName('FC Barcelona') === 'برشلونة' && arName('Real Madrid') === 'ريال مدريد' &&
+    arName('Manchester City') === 'مان سيتي' && arName('Al Hilal') === 'الهلال' &&
+    arName('Some Tiny FC') === 'Some Tiny FC');
+
+  // 22. reactions: distinct + deterministic per fixture (no RNG streaks)
+  const seenRx = new Set();
+  for (let i = 0; i < 40; i++) {
+    seenRx.add(format.resultWin({ id: 'fx-' + i, home: 'A', away: 'B', score: '1-0' }).split('\n')[0]);
+  }
+  const again = format.resultWin({ id: 'fx-7', home: 'A', away: 'B', score: '1-0' }).split('\n')[0];
+  ok('22. varied deterministic reactions',
+    seenRx.size >= 5 && again === format.resultWin({ id: 'fx-7', home: 'A', away: 'B', score: '1-0' }).split('\n')[0]);
+
+  // 23. logo chain degrades gracefully (dry mode, no token needed)
+  const sender2 = require('./src/send');
+  const r23a = await sender2.sendPhotoOrText({ home: 'A', away: 'B' }, {}, '<b>x</b>', { dryRun: true });
+  const r23b = await sender2.sendPhotoOrText({ home: 'A', away: 'B' }, { A: 'http://x/y.png' }, '<b>x</b>', { dryRun: true });
+  ok('23. logo fallback chain', r23a.dry === true && r23b.dry === true);
+
   done();
 }
 function done() {
-  console.log(fails === 0 ? '\n✅ ALL 20 CHECKS PASSED' : `\n❌ ${fails} CHECK(S) FAILED`);
+  console.log(fails === 0 ? '\n✅ ALL 23 CHECKS PASSED' : `\n❌ ${fails} CHECK(S) FAILED`);
   process.exit(fails === 0 ? 0 : 1);
 }
 main().catch((e) => { console.log('FATAL', e.message); process.exit(1); });

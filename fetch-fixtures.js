@@ -2,7 +2,7 @@
 // Local .env loader (git-ignored; GitHub Actions uses Secrets instead).
 try {
   require('fs').readFileSync(require('path').join(__dirname, '.env'), 'utf8')
-    .split('\n').forEach((l) => {
+    .split(/\r?\n/).forEach((l) => {
       const m = l.match(/^([A-Z_]+)=(.*)$/);
       if (m && !process.env[m[1]]) process.env[m[1]] = m[2].trim();
     });
@@ -27,12 +27,13 @@ async function main() {
     console.log('source: api-football (key present, all 10 leagues)');
     data = await apif.load(apif.todayPlus(0), apif.todayPlus(2));
   } else {
-    console.log('source: openfootball (7) + opentxt Belgian + espn Turkish/Saudi');
+    console.log('source: openfootball + opentxt Belgian + espn (Turkish/Saudi + extras)');
     const [of, tx, es] = [await ofree.load(), await otxt.load(), await espn.load()];
     data = {
       fixtures: [...of.fixtures, ...tx.fixtures, ...es.fixtures].sort((a, b) => new Date(a.date) - new Date(b.date)),
       tables: { ...of.tables, ...tx.tables, ...es.tables },
       history: { ...of.history, ...tx.history, ...es.history },
+      logos: { ...(es.logos || {}) },
     };
   }
   // Merge per league: refreshed leagues replace old data; skipped leagues
@@ -51,6 +52,7 @@ async function main() {
   for (const [lg, h] of Object.entries(old.history || {})) {
     if (!refreshed.has(lg)) keptHistory[lg] = h;
   }
+  const keptLogos = { ...(old.logos || {}), ...(data.logos || {}) };
   const keptLeagues = [...new Set([...keptFixtures.map((f) => f.league), ...Object.keys(keptTables)])];
   if (keptLeagues.length) console.log('kept previous data for: ' + keptLeagues.join(', '));
   const cache = {
@@ -59,6 +61,7 @@ async function main() {
     fixtures: [...keptFixtures, ...data.fixtures].sort((a, b) => new Date(a.date) - new Date(b.date)),
     tables: { ...keptTables, ...data.tables },
     history: { ...(data.history || {}), ...keptHistory },
+    logos: keptLogos,
   };
   fs.mkdirSync(path.join(__dirname, 'data'), { recursive: true });
   fs.writeFileSync(path.join(__dirname, 'data', 'cache.json'), JSON.stringify(cache));

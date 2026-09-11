@@ -2,7 +2,7 @@
 // Local .env loader (git-ignored; GitHub Actions uses Secrets instead).
 try {
   require('fs').readFileSync(require('path').join(__dirname, '.env'), 'utf8')
-    .split('\n').forEach((l) => {
+    .split(/\r?\n/).forEach((l) => {
       const m = l.match(/^([A-Z_]+)=(.*)$/);
       if (m && !process.env[m[1]]) process.env[m[1]] = m[2].trim();
     });

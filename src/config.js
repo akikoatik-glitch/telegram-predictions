@@ -45,12 +45,12 @@ module.exports = {
   apiBase: 'https://v3.football.api-sports.io',
   ofBase: 'https://raw.githubusercontent.com/openfootball/football.json/master/',
   season: str('SEASON', '2026-27'),
-  lang: str('LANG', 'both'), // both | ar | en
+  lang: str('LANG', 'ar'), // ar | both | en (channel is Arabic-only by default)
   displayTz: str('DISPLAY_TZ', 'Africa/Algiers'), // kickoff shown in this zone
   leadMin: num('LEAD_MINUTES_MIN', Math.max(2, target - spread)),
   leadMax: num('LEAD_MINUTES_MAX', target + 5),
   targetKickoffLead: target,
-  minConfidence: num('MIN_CONFIDENCE', 60), // below this: SKIP, never publish
+  minConfidence: num('MIN_CONFIDENCE', 75), // below this: SKIP, never publish
   maxPostsPerDay: num('MAX_POSTS_PER_DAY', 15),
   dryRun: /^true$/i.test(str('DRY_RUN', 'false')),
   paused: /^true$/i.test(str('PAUSED', 'false')),

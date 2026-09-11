@@ -64,9 +64,9 @@ jobs:
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           API_FOOTBALL_KEY: ${{ secrets.API_FOOTBALL_KEY }}
           SEASON: '2026-27'
-          LANG: 'both'
+          LANG: 'ar'
           PREDICTION_MINUTES_BEFORE_KICKOFF: '15'
-          MIN_CONFIDENCE: '60'
+          MIN_CONFIDENCE: '75'
           MAX_POSTS_PER_DAY: '15'
       - name: Commit predictions DB
         run: |
@@ -95,7 +95,7 @@ jobs:
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           API_FOOTBALL_KEY: ${{ secrets.API_FOOTBALL_KEY }}
           SEASON: '2026-27'
-          LANG: 'both'
+          LANG: 'ar'
       - run: node stats.js --md
       - name: Commit results + stats
         run: |

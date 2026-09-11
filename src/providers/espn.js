@@ -50,9 +50,14 @@ function teamsOf(ev) {
     out[t.homeAway === 'home' ? 'h' : 'a'] = {
       name: (t.team.displayName || t.team.name || '').trim(),
       score: t.score != null ? parseInt(t.score, 10) : null,
+      logo: t.team.logo || null,
     };
   }
   return out;
+}
+function harvestLogos(out, h, a) {
+  if (h && h.name && h.logo) out[h.name] = h.logo;
+  if (a && a.name && a.logo) out[a.name] = a.logo;
 }
 
 async function load() {
@@ -63,6 +68,7 @@ async function load() {
   const fixtures = [];
   const tables = {};
   const history = {};
+  const logos = {}; // team display name -> ESPN logo URL
   const fetched = [];
   for (const lg of leagues) {
     try {
@@ -74,6 +80,7 @@ async function load() {
         if (!isFinished(ev)) continue;
         const { h, a } = teamsOf(ev);
         if (!h || !a || h.score == null || a.score == null || !h.name || !a.name) continue;
+        harvestLogos(logos, h, a);
         for (const [nm, gf, ga] of [[h.name, h.score, a.score], [a.name, a.score, h.score]]) {
           table[nm] = table[nm] || { played: 0, gf: 0, ga: 0 };
           table[nm].played++; table[nm].gf += gf; table[nm].ga += ga;
@@ -90,6 +97,7 @@ async function load() {
         const { h, a } = teamsOf(ev);
         const c = compOf(ev);
         if (!h || !a || !h.name || !a.name || !c.date) continue;
+        harvestLogos(logos, h, a);
         if (new Date(c.date).getTime() < Date.now() - 30 * 60000) continue; // stale
         fixtures.push({
           id: `espn-${ev.id}`,
@@ -111,7 +119,7 @@ async function load() {
     }
   }
   fixtures.sort((a, b) => new Date(a.date) - new Date(b.date));
-  return { fixtures, tables, history, fetched };
+  return { fixtures, tables, history, logos, fetched };
 }
 
 // Scores for graded matches: {fixtureId: 'H-A'} for finished ones.
