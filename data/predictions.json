@@ -73,5 +73,137 @@
   "gradedAt": null,
   "source": "openfootball",
   "model": "poisson-v2"
+ },
+ "of-it.1-2026-09-11-20:45-venezia-fc-v-acf-fiorentina": {
+  "id": "of-it.1-2026-09-11-20:45-venezia-fc-v-acf-fiorentina",
+  "league": "Serie A",
+  "home": "Venezia FC",
+  "away": "ACF Fiorentina",
+  "kickoff": "2026-09-11T18:45:00.000Z",
+  "day": "2026-09-11",
+  "pickType": "1X",
+  "pickLabelEn": "Venezia FC or Draw",
+  "pickLabelAr": "Venezia FC أو التعادل",
+  "confidence": 74,
+  "bandEn": "High",
+  "bandAr": "مرتفع",
+  "probs": {
+   "p1": 53,
+   "px": 23,
+   "p2": 24,
+   "over25": 55,
+   "bttsYes": 56,
+   "score": "1-1"
+  },
+  "formH": "L-L-L",
+  "formA": "L-L-L",
+  "posH": "18/20",
+  "posA": "20/20",
+  "signals": {
+   "voteAgree": false,
+   "formPick": "O25",
+   "sources": [
+    "season-table",
+    "recent-form",
+    "home-away-split"
+   ]
+  },
+  "postedAt": "2026-09-11T18:27:59.642Z",
+  "messageId": 895,
+  "dry": false,
+  "status": "posted",
+  "score": null,
+  "won": null,
+  "gradedAt": null,
+  "source": "openfootball",
+  "model": "poisson-v2"
+ },
+ "of-fr.1-2026-09-11-20:45-stade-rennais-fc-1901-v-olympique-de-marseille": {
+  "id": "of-fr.1-2026-09-11-20:45-stade-rennais-fc-1901-v-olympique-de-marseille",
+  "league": "Ligue 1",
+  "home": "Stade Rennais FC 1901",
+  "away": "Olympique de Marseille",
+  "kickoff": "2026-09-11T18:45:00.000Z",
+  "day": "2026-09-11",
+  "pickType": "1X",
+  "pickLabelEn": "Stade Rennais FC 1901 or Draw",
+  "pickLabelAr": "Stade Rennais FC 1901 أو التعادل",
+  "confidence": 67,
+  "bandEn": "Medium",
+  "bandAr": "متوسط",
+  "probs": {
+   "p1": 49,
+   "px": 24,
+   "p2": 28,
+   "over25": 57,
+   "bttsYes": 59,
+   "score": "1-1"
+  },
+  "formH": "D-W-W",
+  "formA": "W-L-L",
+  "posH": "4/18",
+  "posA": "8/18",
+  "signals": {
+   "voteAgree": false,
+   "formPick": "U35",
+   "sources": [
+    "season-table",
+    "recent-form",
+    "home-away-split"
+   ]
+  },
+  "postedAt": "2026-09-11T18:28:02.569Z",
+  "messageId": 896,
+  "dry": false,
+  "status": "posted",
+  "score": null,
+  "won": null,
+  "gradedAt": null,
+  "source": "openfootball",
+  "model": "poisson-v2"
+ },
+ "txt-bel-2026-09-11-20:45-kv-mechelen-v-rsc-anderlecht": {
+  "id": "txt-bel-2026-09-11-20:45-kv-mechelen-v-rsc-anderlecht",
+  "league": "Belgian Pro League",
+  "home": "KV Mechelen",
+  "away": "RSC Anderlecht",
+  "kickoff": "2026-09-11T18:45:00.000Z",
+  "day": "2026-09-11",
+  "pickType": "1X",
+  "pickLabelEn": "KV Mechelen or Draw",
+  "pickLabelAr": "KV Mechelen أو التعادل",
+  "confidence": 63,
+  "bandEn": "Medium",
+  "bandAr": "متوسط",
+  "probs": {
+   "p1": 46,
+   "px": 25,
+   "p2": 29,
+   "over25": 51,
+   "bttsYes": 55,
+   "score": "1-1"
+  },
+  "formH": "",
+  "formA": "",
+  "posH": null,
+  "posA": null,
+  "signals": {
+   "voteAgree": true,
+   "formPick": "1X",
+   "sources": [
+    "season-table",
+    "recent-form",
+    "home-away-split"
+   ]
+  },
+  "postedAt": "2026-09-11T18:28:05.378Z",
+  "messageId": 897,
+  "dry": false,
+  "status": "posted",
+  "score": null,
+  "won": null,
+  "gradedAt": null,
+  "source": "opentxt",
+  "model": "poisson-v2"
  }
 }
