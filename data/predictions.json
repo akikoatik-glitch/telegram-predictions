@@ -977,5 +977,93 @@
   "gradedAt": null,
   "source": "openfootball",
   "model": "poisson-v2"
+ },
+ "of-nl.1-2026-09-12-16:30-fc-twente-65-v-ado-den-haag": {
+  "id": "of-nl.1-2026-09-12-16:30-fc-twente-65-v-ado-den-haag",
+  "league": "Eredivisie",
+  "home": "FC Twente '65",
+  "away": "ADO Den Haag",
+  "kickoff": "2026-09-12T14:30:00.000Z",
+  "day": "2026-09-12",
+  "pickType": "1X",
+  "pickLabelEn": "FC Twente '65 or Draw",
+  "pickLabelAr": "FC Twente '65 أو التعادل",
+  "confidence": 92,
+  "bandEn": "Extremely High",
+  "bandAr": "مرتفع جداً جداً",
+  "probs": {
+   "p1": 64,
+   "px": 21,
+   "p2": 15,
+   "over25": 51,
+   "bttsYes": 47,
+   "score": "1-0"
+  },
+  "formH": "L-W-W-D",
+  "formA": "L-L-L-D-L",
+  "posH": "7/18",
+  "posA": "15/18",
+  "signals": {
+   "voteAgree": true,
+   "formPick": "1X",
+   "sources": [
+    "season-table",
+    "recent-form",
+    "home-away-split"
+   ]
+  },
+  "postedAt": "2026-09-12T14:20:47.329Z",
+  "messageId": 905,
+  "dry": false,
+  "status": "posted",
+  "score": null,
+  "won": null,
+  "gradedAt": null,
+  "source": "openfootball",
+  "model": "poisson-v2"
+ },
+ "of-pt.1-2026-09-12-15:30-cd-nacional-v-fc-alverca": {
+  "id": "of-pt.1-2026-09-12-15:30-cd-nacional-v-fc-alverca",
+  "league": "Primeira Liga",
+  "home": "CD Nacional",
+  "away": "FC Alverca",
+  "kickoff": "2026-09-12T14:30:00.000Z",
+  "day": "2026-09-12",
+  "pickType": "1X",
+  "pickLabelEn": "CD Nacional or Draw",
+  "pickLabelAr": "CD Nacional أو التعادل",
+  "confidence": 81,
+  "bandEn": "High",
+  "bandAr": "مرتفع",
+  "probs": {
+   "p1": 53,
+   "px": 24,
+   "p2": 23,
+   "over25": 54,
+   "bttsYes": 55,
+   "score": "1-1"
+  },
+  "formH": "D-W-L-L-L",
+  "formA": "L-D-L-D-L",
+  "posH": "11/18",
+  "posA": "16/18",
+  "signals": {
+   "voteAgree": true,
+   "formPick": "1X",
+   "sources": [
+    "season-table",
+    "recent-form",
+    "home-away-split"
+   ]
+  },
+  "postedAt": "2026-09-12T14:20:50.043Z",
+  "messageId": 906,
+  "dry": false,
+  "status": "posted",
+  "score": null,
+  "won": null,
+  "gradedAt": null,
+  "source": "openfootball",
+  "model": "poisson-v2"
  }
 }
