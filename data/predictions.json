@@ -1298,5 +1298,49 @@
   "gradedAt": null,
   "source": "openfootball",
   "model": "poisson-v2"
+ },
+ "of-pt.1-2026-09-12-18:00-casa-pia-ac-v-fc-porto": {
+  "id": "of-pt.1-2026-09-12-18:00-casa-pia-ac-v-fc-porto",
+  "league": "Primeira Liga",
+  "home": "Casa Pia AC",
+  "away": "FC Porto",
+  "kickoff": "2026-09-12T17:00:00.000Z",
+  "day": "2026-09-12",
+  "pickType": "X2",
+  "pickLabelEn": "FC Porto or Draw",
+  "pickLabelAr": "بورتو أو التعادل",
+  "confidence": 92,
+  "bandEn": "Extremely High",
+  "bandAr": "مرتفع جداً جداً",
+  "probs": {
+   "p1": 8,
+   "px": 18,
+   "p2": 74,
+   "over25": 49,
+   "bttsYes": 36,
+   "score": "0-2"
+  },
+  "formH": "L-L-L-L",
+  "formA": "W-W-W-W-W",
+  "posH": "18/18",
+  "posA": "1/18",
+  "signals": {
+   "voteAgree": true,
+   "formPick": "X2",
+   "sources": [
+    "season-table",
+    "recent-form",
+    "home-away-split"
+   ]
+  },
+  "postedAt": "2026-09-12T16:40:42.669Z",
+  "messageId": 909,
+  "dry": false,
+  "status": "posted",
+  "score": null,
+  "won": null,
+  "gradedAt": null,
+  "source": "openfootball",
+  "model": "poisson-v2"
  }
 }
