@@ -1254,5 +1254,49 @@
   "gradedAt": null,
   "source": "openfootball",
   "model": "poisson-v2"
+ },
+ "of-nl.1-2026-09-12-18:45-go-ahead-eagles-v-fc-groningen": {
+  "id": "of-nl.1-2026-09-12-18:45-go-ahead-eagles-v-fc-groningen",
+  "league": "Eredivisie",
+  "home": "Go Ahead Eagles",
+  "away": "FC Groningen",
+  "kickoff": "2026-09-12T16:45:00.000Z",
+  "day": "2026-09-12",
+  "pickType": "1X",
+  "pickLabelEn": "Go Ahead Eagles or Draw",
+  "pickLabelAr": "Go Ahead Eagles أو التعادل",
+  "confidence": 78,
+  "bandEn": "High",
+  "bandAr": "مرتفع",
+  "probs": {
+   "p1": 53,
+   "px": 22,
+   "p2": 25,
+   "over25": 62,
+   "bttsYes": 62,
+   "score": "1-1"
+  },
+  "formH": "W-D-W-L",
+  "formA": "W-W-L-L-D",
+  "posH": "8/18",
+  "posA": "9/18",
+  "signals": {
+   "voteAgree": true,
+   "formPick": "1X",
+   "sources": [
+    "season-table",
+    "recent-form",
+    "home-away-split"
+   ]
+  },
+  "postedAt": "2026-09-12T16:28:23.571Z",
+  "messageId": 908,
+  "dry": false,
+  "status": "posted",
+  "score": null,
+  "won": null,
+  "gradedAt": null,
+  "source": "openfootball",
+  "model": "poisson-v2"
  }
 }
