@@ -1706,5 +1706,49 @@
   "gradedAt": null,
   "source": "openfootball",
   "model": "poisson-v2"
+ },
+ "of-de.1-2026-09-13-15:30-rb-leipzig-v-hamburger-sv": {
+  "id": "of-de.1-2026-09-13-15:30-rb-leipzig-v-hamburger-sv",
+  "league": "Bundesliga",
+  "home": "RB Leipzig",
+  "away": "Hamburger SV",
+  "kickoff": "2026-09-13T13:30:00.000Z",
+  "day": "2026-09-13",
+  "pickType": "1X",
+  "pickLabelEn": "RB Leipzig or Draw",
+  "pickLabelAr": "لايبزيغ أو التعادل",
+  "confidence": 80,
+  "bandEn": "High",
+  "bandAr": "مرتفع",
+  "probs": {
+   "p1": 57,
+   "px": 24,
+   "p2": 19,
+   "over25": 48,
+   "bttsYes": 48,
+   "score": "1-0"
+  },
+  "formH": "W-L",
+  "formA": "L-L",
+  "posH": "8/18",
+  "posA": "18/18",
+  "signals": {
+   "voteAgree": true,
+   "formPick": "1X",
+   "sources": [
+    "season-table",
+    "recent-form",
+    "home-away-split"
+   ]
+  },
+  "postedAt": "2026-09-13T13:21:27.715Z",
+  "messageId": 913,
+  "dry": false,
+  "status": "posted",
+  "score": null,
+  "won": null,
+  "gradedAt": null,
+  "source": "openfootball",
+  "model": "poisson-v2"
  }
 }
