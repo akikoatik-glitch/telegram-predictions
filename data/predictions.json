@@ -2026,5 +2026,49 @@
   "gradedAt": null,
   "source": "opentxt",
   "model": "poisson-v2"
+ },
+ "of-nl.1-2026-09-13-20:00-psv-v-sparta-rotterdam": {
+  "id": "of-nl.1-2026-09-13-20:00-psv-v-sparta-rotterdam",
+  "league": "Eredivisie",
+  "home": "PSV",
+  "away": "Sparta Rotterdam",
+  "kickoff": "2026-09-13T18:00:00.000Z",
+  "day": "2026-09-13",
+  "pickType": "1X",
+  "pickLabelEn": "PSV or Draw",
+  "pickLabelAr": "آيندهوفن أو التعادل",
+  "confidence": 92,
+  "bandEn": "Extremely High",
+  "bandAr": "مرتفع جداً جداً",
+  "probs": {
+   "p1": 64,
+   "px": 20,
+   "p2": 16,
+   "over25": 56,
+   "bttsYes": 51,
+   "score": "2-0"
+  },
+  "formH": "D-W-W-W-W",
+  "formA": "L-W-D-L-D",
+  "posH": "2/18",
+  "posA": "11/18",
+  "signals": {
+   "voteAgree": true,
+   "formPick": "1X",
+   "sources": [
+    "season-table",
+    "recent-form",
+    "home-away-split"
+   ]
+  },
+  "postedAt": "2026-09-13T17:48:21.746Z",
+  "messageId": 915,
+  "dry": false,
+  "status": "posted",
+  "score": null,
+  "won": null,
+  "gradedAt": null,
+  "source": "openfootball",
+  "model": "poisson-v2"
  }
 }
