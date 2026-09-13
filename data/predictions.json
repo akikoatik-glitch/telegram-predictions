@@ -1895,5 +1895,49 @@
   "gradedAt": null,
   "source": "openfootball",
   "model": "poisson-v2"
+ },
+ "of-it.1-2026-09-13-18:00-ssc-napoli-v-bologna-fc-1909": {
+  "id": "of-it.1-2026-09-13-18:00-ssc-napoli-v-bologna-fc-1909",
+  "league": "Serie A",
+  "home": "SSC Napoli",
+  "away": "Bologna FC 1909",
+  "kickoff": "2026-09-13T16:00:00.000Z",
+  "day": "2026-09-13",
+  "pickType": "1X",
+  "pickLabelEn": "SSC Napoli or Draw",
+  "pickLabelAr": "نابولي أو التعادل",
+  "confidence": 75,
+  "bandEn": "High",
+  "bandAr": "مرتفع",
+  "probs": {
+   "p1": 51,
+   "px": 25,
+   "p2": 25,
+   "over25": 51,
+   "bttsYes": 53,
+   "score": "1-1"
+  },
+  "formH": "W-L-L",
+  "formA": "L-L-D",
+  "posH": "12/20",
+  "posA": "15/20",
+  "signals": {
+   "voteAgree": true,
+   "formPick": "1X",
+   "sources": [
+    "season-table",
+    "recent-form",
+    "home-away-split"
+   ]
+  },
+  "postedAt": "2026-09-13T15:46:17.970Z",
+  "messageId": 914,
+  "dry": false,
+  "status": "posted",
+  "score": null,
+  "won": null,
+  "gradedAt": null,
+  "source": "openfootball",
+  "model": "poisson-v2"
  }
 }
