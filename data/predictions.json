@@ -2390,5 +2390,49 @@
   "gradedAt": null,
   "source": "openfootball",
   "model": "poisson-v2"
+ },
+ "of-pt.1-2026-09-14-20:45-sporting-clube-de-braga-v-gd-estoril-praia": {
+  "id": "of-pt.1-2026-09-14-20:45-sporting-clube-de-braga-v-gd-estoril-praia",
+  "league": "Primeira Liga",
+  "home": "Sporting Clube de Braga",
+  "away": "GD Estoril Praia",
+  "kickoff": "2026-09-14T19:45:00.000Z",
+  "day": "2026-09-14",
+  "pickType": "1X",
+  "pickLabelEn": "Sporting Clube de Braga or Draw",
+  "pickLabelAr": "سبورتينغ أو التعادل",
+  "confidence": 87,
+  "bandEn": "Very High",
+  "bandAr": "مرتفع جداً",
+  "probs": {
+   "p1": 61,
+   "px": 23,
+   "p2": 16,
+   "over25": 48,
+   "bttsYes": 46,
+   "score": "1-0"
+  },
+  "formH": "D-W-W",
+  "formA": "D-L-L-L",
+  "posH": "6/18",
+  "posA": "17/18",
+  "signals": {
+   "voteAgree": true,
+   "formPick": "1X",
+   "sources": [
+    "season-table",
+    "recent-form",
+    "home-away-split"
+   ]
+  },
+  "postedAt": "2026-09-14T19:31:19.741Z",
+  "messageId": 929,
+  "dry": false,
+  "status": "posted",
+  "score": null,
+  "won": null,
+  "gradedAt": null,
+  "source": "openfootball",
+  "model": "poisson-v2"
  }
 }
