@@ -2259,5 +2259,49 @@
   "gradedAt": null,
   "source": "openfootball",
   "model": "poisson-v2"
+ },
+ "of-it.1-2026-09-14-20:45-fc-internazionale-milano-v-udinese-calcio": {
+  "id": "of-it.1-2026-09-14-20:45-fc-internazionale-milano-v-udinese-calcio",
+  "league": "Serie A",
+  "home": "FC Internazionale Milano",
+  "away": "Udinese Calcio",
+  "kickoff": "2026-09-14T18:45:00.000Z",
+  "day": "2026-09-14",
+  "pickType": "1X",
+  "pickLabelEn": "FC Internazionale Milano or Draw",
+  "pickLabelAr": "إنتر أو التعادل",
+  "confidence": 87,
+  "bandEn": "Very High",
+  "bandAr": "مرتفع جداً",
+  "probs": {
+   "p1": 59,
+   "px": 20,
+   "p2": 20,
+   "over25": 64,
+   "bttsYes": 60,
+   "score": "2-1"
+  },
+  "formH": "W-W-W",
+  "formA": "D-W-L",
+  "posH": "2/20",
+  "posA": "10/20",
+  "signals": {
+   "voteAgree": true,
+   "formPick": "1X",
+   "sources": [
+    "season-table",
+    "recent-form",
+    "home-away-split"
+   ]
+  },
+  "postedAt": "2026-09-14T18:26:50.232Z",
+  "messageId": 928,
+  "dry": false,
+  "status": "posted",
+  "score": null,
+  "won": null,
+  "gradedAt": null,
+  "source": "openfootball",
+  "model": "poisson-v2"
  }
 }
