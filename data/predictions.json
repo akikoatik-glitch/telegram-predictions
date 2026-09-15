@@ -2434,5 +2434,93 @@
   "gradedAt": null,
   "source": "openfootball",
   "model": "poisson-v2"
+ },
+ "of-es.1-2026-09-15-20:00-deportivo-alav-s-v-valencia-cf": {
+  "id": "of-es.1-2026-09-15-20:00-deportivo-alav-s-v-valencia-cf",
+  "league": "La Liga",
+  "home": "Deportivo Alavés",
+  "away": "Valencia CF",
+  "kickoff": "2026-09-15T18:00:00.000Z",
+  "day": "2026-09-15",
+  "pickType": "1X",
+  "pickLabelEn": "Deportivo Alavés or Draw",
+  "pickLabelAr": "Deportivo Alavés أو التعادل",
+  "confidence": 92,
+  "bandEn": "Extremely High",
+  "bandAr": "مرتفع جداً جداً",
+  "probs": {
+   "p1": 74,
+   "px": 17,
+   "p2": 10,
+   "over25": 58,
+   "bttsYes": 45,
+   "score": "2-0"
+  },
+  "formH": "W-D-W-W",
+  "formA": "L-L-L",
+  "posH": "2/20",
+  "posA": "20/20",
+  "signals": {
+   "voteAgree": true,
+   "formPick": "1X",
+   "sources": [
+    "season-table",
+    "recent-form",
+    "home-away-split"
+   ]
+  },
+  "postedAt": "2026-09-15T17:47:40.320Z",
+  "messageId": 932,
+  "dry": false,
+  "status": "posted",
+  "score": null,
+  "won": null,
+  "gradedAt": null,
+  "source": "openfootball",
+  "model": "poisson-v2"
+ },
+ "of-nl.1-2026-09-15-20:00-afc-ajax-v-willem-ii-tilburg": {
+  "id": "of-nl.1-2026-09-15-20:00-afc-ajax-v-willem-ii-tilburg",
+  "league": "Eredivisie",
+  "home": "AFC Ajax",
+  "away": "Willem II Tilburg",
+  "kickoff": "2026-09-15T18:00:00.000Z",
+  "day": "2026-09-15",
+  "pickType": "1X",
+  "pickLabelEn": "AFC Ajax or Draw",
+  "pickLabelAr": "أياكس أو التعادل",
+  "confidence": 92,
+  "bandEn": "Extremely High",
+  "bandAr": "مرتفع جداً جداً",
+  "probs": {
+   "p1": 66,
+   "px": 20,
+   "p2": 14,
+   "over25": 53,
+   "bttsYes": 48,
+   "score": "2-0"
+  },
+  "formH": "W-D-W-L",
+  "formA": "L-L-D-L",
+  "posH": "6/18",
+  "posA": "17/18",
+  "signals": {
+   "voteAgree": true,
+   "formPick": "1X",
+   "sources": [
+    "season-table",
+    "recent-form",
+    "home-away-split"
+   ]
+  },
+  "postedAt": "2026-09-15T17:47:42.990Z",
+  "messageId": 933,
+  "dry": false,
+  "status": "posted",
+  "score": null,
+  "won": null,
+  "gradedAt": null,
+  "source": "openfootball",
+  "model": "poisson-v2"
  }
 }
