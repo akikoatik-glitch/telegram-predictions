@@ -2595,5 +2595,49 @@
   "gradedAt": null,
   "source": "openfootball",
   "model": "poisson-v2"
+ },
+ "of-es.1-2026-09-15-21:30-elche-cf-v-real-madrid-cf": {
+  "id": "of-es.1-2026-09-15-21:30-elche-cf-v-real-madrid-cf",
+  "league": "La Liga",
+  "home": "Elche CF",
+  "away": "Real Madrid CF",
+  "kickoff": "2026-09-15T19:30:00.000Z",
+  "day": "2026-09-15",
+  "pickType": "X2",
+  "pickLabelEn": "Real Madrid CF or Draw",
+  "pickLabelAr": "ريال مدريد أو التعادل",
+  "confidence": 83,
+  "bandEn": "Very High",
+  "bandAr": "مرتفع جداً",
+  "probs": {
+   "p1": 22,
+   "px": 22,
+   "p2": 56,
+   "over25": 57,
+   "bttsYes": 56,
+   "score": "1-1"
+  },
+  "formH": "D-L-L-L",
+  "formA": "W-W-W-L",
+  "posH": "19/20",
+  "posA": "3/20",
+  "signals": {
+   "voteAgree": true,
+   "formPick": "X2",
+   "sources": [
+    "season-table",
+    "recent-form",
+    "home-away-split"
+   ]
+  },
+  "postedAt": "2026-09-15T19:14:41.397Z",
+  "messageId": 935,
+  "dry": false,
+  "status": "posted",
+  "score": null,
+  "won": null,
+  "gradedAt": null,
+  "source": "openfootball",
+  "model": "poisson-v2"
  }
 }
