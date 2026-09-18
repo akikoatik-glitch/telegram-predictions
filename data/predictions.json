@@ -2828,5 +2828,49 @@
   "gradedAt": null,
   "source": "openfootball",
   "model": "poisson-v2"
+ },
+ "of-nl.1-2026-09-18-20:00-fc-groningen-v-pec-zwolle": {
+  "id": "of-nl.1-2026-09-18-20:00-fc-groningen-v-pec-zwolle",
+  "league": "Eredivisie",
+  "home": "FC Groningen",
+  "away": "PEC Zwolle",
+  "kickoff": "2026-09-18T18:00:00.000Z",
+  "day": "2026-09-18",
+  "pickType": "1X",
+  "pickLabelEn": "FC Groningen or Draw",
+  "pickLabelAr": "FC Groningen أو التعادل",
+  "confidence": 77,
+  "bandEn": "High",
+  "bandAr": "مرتفع",
+  "probs": {
+   "p1": 51,
+   "px": 25,
+   "p2": 24,
+   "over25": 49,
+   "bttsYes": 51,
+   "score": "1-1"
+  },
+  "formH": "W-W-L-L-D",
+  "formA": "L-L-W-L-D",
+  "posH": "9/18",
+  "posA": "13/18",
+  "signals": {
+   "voteAgree": true,
+   "formPick": "1X",
+   "sources": [
+    "season-table",
+    "recent-form",
+    "home-away-split"
+   ]
+  },
+  "postedAt": "2026-09-18T17:44:19.175Z",
+  "messageId": 958,
+  "dry": false,
+  "status": "posted",
+  "score": null,
+  "won": null,
+  "gradedAt": null,
+  "source": "openfootball",
+  "model": "poisson-v2"
  }
 }
