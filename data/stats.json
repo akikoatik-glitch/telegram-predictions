@@ -1,10 +1,94 @@
 {
- "total": 0,
- "correct": 0,
- "incorrect": 0,
+ "total": 29,
+ "correct": 23,
+ "incorrect": 6,
  "pending": 0,
- "byLeague": {},
- "byType": {},
- "byBand": {},
- "byDay": {}
+ "byLeague": {
+  "Primeira Liga": {
+   "total": 4,
+   "correct": 3
+  },
+  "Eredivisie": {
+   "total": 6,
+   "correct": 5
+  },
+  "Serie A": {
+   "total": 4,
+   "correct": 3
+  },
+  "Ligue 1": {
+   "total": 2,
+   "correct": 2
+  },
+  "Championship": {
+   "total": 4,
+   "correct": 3
+  },
+  "La Liga": {
+   "total": 6,
+   "correct": 5
+  },
+  "Bundesliga": {
+   "total": 3,
+   "correct": 2
+  }
+ },
+ "byType": {
+  "1X": {
+   "total": 26,
+   "correct": 21
+  },
+  "X2": {
+   "total": 3,
+   "correct": 2
+  }
+ },
+ "byBand": {
+  "Medium": {
+   "total": 2,
+   "correct": 2
+  },
+  "Extremely High": {
+   "total": 9,
+   "correct": 8
+  },
+  "High": {
+   "total": 10,
+   "correct": 6
+  },
+  "Very High": {
+   "total": 8,
+   "correct": 7
+  }
+ },
+ "byDay": {
+  "2026-09-10": {
+   "total": 1,
+   "correct": 1
+  },
+  "2026-09-11": {
+   "total": 5,
+   "correct": 4
+  },
+  "2026-09-12": {
+   "total": 11,
+   "correct": 8
+  },
+  "2026-09-13": {
+   "total": 4,
+   "correct": 4
+  },
+  "2026-09-14": {
+   "total": 3,
+   "correct": 3
+  },
+  "2026-09-15": {
+   "total": 4,
+   "correct": 2
+  },
+  "2026-09-16": {
+   "total": 1,
+   "correct": 1
+  }
+ }
 }
