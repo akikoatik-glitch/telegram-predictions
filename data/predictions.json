@@ -3612,5 +3612,49 @@
   "gradedAt": null,
   "source": "openfootball",
   "model": "poisson-v2"
+ },
+ "of-nl.1-2026-09-20-12:15-feyenoord-rotterdam-v-fc-utrecht": {
+  "id": "of-nl.1-2026-09-20-12:15-feyenoord-rotterdam-v-fc-utrecht",
+  "league": "Eredivisie",
+  "home": "Feyenoord Rotterdam",
+  "away": "FC Utrecht",
+  "kickoff": "2026-09-20T10:15:00.000Z",
+  "day": "2026-09-20",
+  "pickType": "1X",
+  "pickLabelEn": "Feyenoord Rotterdam or Draw",
+  "pickLabelAr": "فينورد أو التعادل",
+  "confidence": 92,
+  "bandEn": "Extremely High",
+  "bandAr": "مرتفع جداً جداً",
+  "probs": {
+   "p1": 79,
+   "px": 13,
+   "p2": 8,
+   "over25": 72,
+   "bttsYes": 53,
+   "score": "2-0"
+  },
+  "formH": "D-W-D-W-W",
+  "formA": "L-D-L-D-W",
+  "posH": "3/18",
+  "posA": "13/18",
+  "signals": {
+   "voteAgree": true,
+   "formPick": "1X",
+   "sources": [
+    "season-table",
+    "recent-form",
+    "home-away-split"
+   ]
+  },
+  "postedAt": "2026-09-20T09:55:16.683Z",
+  "messageId": 989,
+  "dry": false,
+  "status": "posted",
+  "score": null,
+  "won": null,
+  "gradedAt": null,
+  "source": "openfootball",
+  "model": "poisson-v2"
  }
 }
