@@ -1,16 +1,16 @@
 {
- "total": 29,
- "correct": 23,
- "incorrect": 6,
+ "total": 34,
+ "correct": 26,
+ "incorrect": 8,
  "pending": 0,
  "byLeague": {
   "Primeira Liga": {
-   "total": 4,
+   "total": 5,
    "correct": 3
   },
   "Eredivisie": {
-   "total": 6,
-   "correct": 5
+   "total": 8,
+   "correct": 7
   },
   "Serie A": {
    "total": 4,
@@ -25,18 +25,22 @@
    "correct": 3
   },
   "La Liga": {
-   "total": 6,
+   "total": 7,
    "correct": 5
   },
   "Bundesliga": {
    "total": 3,
    "correct": 2
+  },
+  "Premier League": {
+   "total": 1,
+   "correct": 1
   }
  },
  "byType": {
   "1X": {
-   "total": 26,
-   "correct": 21
+   "total": 31,
+   "correct": 24
   },
   "X2": {
    "total": 3,
@@ -49,16 +53,16 @@
    "correct": 2
   },
   "Extremely High": {
-   "total": 9,
-   "correct": 8
+   "total": 10,
+   "correct": 9
   },
   "High": {
-   "total": 10,
-   "correct": 6
+   "total": 11,
+   "correct": 7
   },
   "Very High": {
-   "total": 8,
-   "correct": 7
+   "total": 11,
+   "correct": 8
   }
  },
  "byDay": {
@@ -89,6 +93,14 @@
   "2026-09-16": {
    "total": 1,
    "correct": 1
+  },
+  "2026-09-18": {
+   "total": 2,
+   "correct": 1
+  },
+  "2026-09-20": {
+   "total": 3,
+   "correct": 2
   }
  },
  "lastWeekly": "2026-09-21"
