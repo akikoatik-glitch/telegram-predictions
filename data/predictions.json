@@ -4368,5 +4368,49 @@
   "gradedAt": null,
   "source": "openfootball",
   "model": "poisson-v2"
+ },
+ "of-pt.1-2026-10-10-20:30-acad-mico-de-viseu-fc-v-gd-estoril-praia": {
+  "id": "of-pt.1-2026-10-10-20:30-acad-mico-de-viseu-fc-v-gd-estoril-praia",
+  "league": "Primeira Liga",
+  "home": "Académico de Viseu FC",
+  "away": "GD Estoril Praia",
+  "kickoff": "2026-10-10T19:30:00.000Z",
+  "day": "2026-10-10",
+  "pickType": "1X",
+  "pickLabelEn": "Académico de Viseu FC or Draw",
+  "pickLabelAr": "Académico de Viseu FC أو التعادل",
+  "confidence": 86,
+  "bandEn": "Very High",
+  "bandAr": "مرتفع جداً",
+  "probs": {
+   "p1": 59,
+   "px": 26,
+   "p2": 16,
+   "over25": 37,
+   "bttsYes": 38,
+   "score": "1-0"
+  },
+  "formH": "D-L-W-W-W",
+  "formA": "L-L-L-L-L",
+  "posH": "5/18",
+  "posA": "18/18",
+  "signals": {
+   "voteAgree": true,
+   "formPick": "1X",
+   "sources": [
+    "season-table",
+    "recent-form",
+    "home-away-split"
+   ]
+  },
+  "postedAt": "2026-10-10T19:20:42.467Z",
+  "messageId": 1027,
+  "dry": false,
+  "status": "posted",
+  "score": null,
+  "won": null,
+  "gradedAt": null,
+  "source": "openfootball",
+  "model": "poisson-v2"
  }
 }
