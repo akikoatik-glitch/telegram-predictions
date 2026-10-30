@@ -4863,5 +4863,49 @@
   "gradedAt": null,
   "source": "openfootball",
   "model": "poisson-v2"
+ },
+ "of-pt.1-2026-10-30-20:15-casa-pia-ac-v-sporting-clube-de-portugal": {
+  "id": "of-pt.1-2026-10-30-20:15-casa-pia-ac-v-sporting-clube-de-portugal",
+  "league": "Primeira Liga",
+  "home": "Casa Pia AC",
+  "away": "Sporting Clube de Portugal",
+  "kickoff": "2026-10-30T20:15:00.000Z",
+  "day": "2026-10-30",
+  "pickType": "X2",
+  "pickLabelEn": "Sporting Clube de Portugal or Draw",
+  "pickLabelAr": "سبورتينغ أو التعادل",
+  "confidence": 92,
+  "bandEn": "Extremely High",
+  "bandAr": "مرتفع جداً جداً",
+  "probs": {
+   "p1": 9,
+   "px": 15,
+   "p2": 76,
+   "over25": 65,
+   "bttsYes": 50,
+   "score": "0-2"
+  },
+  "formH": "L-L-L-L-W",
+  "formA": "W-W-W-D-D",
+  "posH": "17/18",
+  "posA": "3/18",
+  "signals": {
+   "voteAgree": true,
+   "formPick": "X2",
+   "sources": [
+    "season-table",
+    "recent-form",
+    "home-away-split"
+   ]
+  },
+  "postedAt": "2026-10-30T20:02:15.466Z",
+  "messageId": 1076,
+  "dry": false,
+  "status": "posted",
+  "score": null,
+  "won": null,
+  "gradedAt": null,
+  "source": "openfootball",
+  "model": "poisson-v2"
  }
 }
