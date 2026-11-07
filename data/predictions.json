@@ -4980,5 +4980,93 @@
   "gradedAt": null,
   "source": "openfootball",
   "model": "poisson-v2"
+ },
+ "of-it.1-2026-11-07-20:45-as-roma-v-us-sassuolo-calcio": {
+  "id": "of-it.1-2026-11-07-20:45-as-roma-v-us-sassuolo-calcio",
+  "league": "Serie A",
+  "home": "AS Roma",
+  "away": "US Sassuolo Calcio",
+  "kickoff": "2026-11-07T19:45:00.000Z",
+  "day": "2026-11-07",
+  "pickType": "1X",
+  "pickLabelEn": "AS Roma or Draw",
+  "pickLabelAr": "روما أو التعادل",
+  "confidence": 92,
+  "bandEn": "Extremely High",
+  "bandAr": "مرتفع جداً جداً",
+  "probs": {
+   "p1": 72,
+   "px": 16,
+   "p2": 12,
+   "over25": 67,
+   "bttsYes": 56,
+   "score": "2-0"
+  },
+  "formH": "W-W-W-W-D",
+  "formA": "L-W-D-W-L",
+  "posH": "1/20",
+  "posA": "10/20",
+  "signals": {
+   "voteAgree": true,
+   "formPick": "1X",
+   "sources": [
+    "season-table",
+    "recent-form",
+    "home-away-split"
+   ]
+  },
+  "postedAt": "2026-11-07T19:27:47.953Z",
+  "messageId": 1094,
+  "dry": false,
+  "status": "posted",
+  "score": null,
+  "won": null,
+  "gradedAt": null,
+  "source": "openfootball",
+  "model": "poisson-v2"
+ },
+ "of-fr.1-2026-11-07-20:45-paris-saint-germain-fc-v-es-troyes-ac": {
+  "id": "of-fr.1-2026-11-07-20:45-paris-saint-germain-fc-v-es-troyes-ac",
+  "league": "Ligue 1",
+  "home": "Paris Saint-Germain FC",
+  "away": "ES Troyes AC",
+  "kickoff": "2026-11-07T19:45:00.000Z",
+  "day": "2026-11-07",
+  "pickType": "1X",
+  "pickLabelEn": "Paris Saint-Germain FC or Draw",
+  "pickLabelAr": "Paris Saint-Germain FC أو التعادل",
+  "confidence": 92,
+  "bandEn": "Very High",
+  "bandAr": "مرتفع جداً",
+  "probs": {
+   "p1": 63,
+   "px": 21,
+   "p2": 17,
+   "over25": 58,
+   "bttsYes": 54,
+   "score": "2-0"
+  },
+  "formH": "D-D-L-W-W",
+  "formA": "W-L-L-L",
+  "posH": "6/18",
+  "posA": "17/18",
+  "signals": {
+   "voteAgree": true,
+   "formPick": "1X",
+   "sources": [
+    "season-table",
+    "recent-form",
+    "home-away-split"
+   ]
+  },
+  "postedAt": "2026-11-07T19:27:50.655Z",
+  "messageId": 1095,
+  "dry": false,
+  "status": "posted",
+  "score": null,
+  "won": null,
+  "gradedAt": null,
+  "source": "openfootball",
+  "model": "poisson-v2"
  }
 }
